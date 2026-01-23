@@ -31,6 +31,10 @@ function App() {
     }
   };
 
+  const extractUrlFromRow = (row) => {
+    return row.url || row.URL || row.link || Object.values(row)[0] || '';
+  };
+
   const generateQRCode = async (text, options = {}) => {
     return await QRCode.toDataURL(text, {
       width: 300,
@@ -111,9 +115,7 @@ function App() {
 
             for (let i = 0; i < chunks.length; i++) {
               const chunk = chunks[i];
-              const urls = chunk.map(row => {
-                return row.url || row.URL || row.link || Object.values(row)[0] || '';
-              }).filter(url => url);
+              const urls = chunk.map(row => extractUrlFromRow(row)).filter(url => url);
 
               if (urls.length > 0) {
                 const imageData = await createMultiQRImage(urls);
@@ -125,7 +127,7 @@ function App() {
             // Generate individual QR codes
             for (let i = 0; i < data.length; i++) {
               const row = data[i];
-              const url = row.url || row.URL || row.link || Object.values(row)[0] || '';
+              const url = extractUrlFromRow(row);
               
               if (!url) continue;
 
