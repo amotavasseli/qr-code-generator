@@ -61,6 +61,8 @@ For custom filenames, include an email column:
 
 Alternatively, emails can be included as URL parameters (e.g., `?email=user@example.com`).
 
+A sample CSV file (`sample.csv`) is included in the repository for reference.
+
 ### Example CSV Format
 
 ```csv
