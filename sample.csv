@@ -1,0 +1,6 @@
+url,email
+https://github.com,github@example.com
+https://react.dev,react@example.com
+https://example.com?id=123&email=user@test.com,
+https://npmjs.com,npm@example.com
+https://nodejs.org,node@example.com
