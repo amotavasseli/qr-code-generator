@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>How to Format a CSV for Bulk QR Code Generation</title>
+    <meta
+      name="description"
+      content="Get your spreadsheet right the first time: headers, UTF-8 encoding, commas inside URLs, delimiters, and the Excel export settings that break bulk QR jobs."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/csv-format-for-bulk-qr-codes.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to format a CSV for bulk QR code generation</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Nearly every failed bulk QR job traces back to the spreadsheet rather
+        than the generator. The file looked fine in Excel, exported without
+        complaint, and then produced half the expected codes or a batch that all
+        scan to the wrong place. This guide covers the format that works and the
+        specific export settings that cause trouble.
+      </p>
+
+      <h2>The minimum viable file</h2>
+      <p>A header row and a column of complete URLs:</p>
+      <pre><code>url
+https://example.com/page-1
+https://example.com/page-2
+https://example.com/page-3</code></pre>
+      <p>
+        That is a valid file. Add a second column if you want meaningful
+        filenames, which is almost always worth doing:
+      </p>
+      <pre><code>url,asset_id
+https://example.com/assets/1001,A-1001
+https://example.com/assets/1002,A-1002
+https://example.com/assets/1003,A-1003</code></pre>
+
+      <h2>Rule 1: keep the header row</h2>
+      <p>
+        The first line must be column names, not data. The generator reads those
+        names and offers them in the two dropdowns. Without a header, your first
+        URL becomes a column name — you lose that code, and the dropdown reads
+        like nonsense.
+      </p>
+      <p>
+        Column names can be anything. There is no required naming convention:
+        <code>url</code>, <code>Link</code>, <code>destination</code> and
+        <code>Column A</code> all work equally well, because you pick the right
+        one after upload. A column called <code>url</code> or
+        <code>link</code> is merely pre-selected as a convenience.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Rule 2: URLs must be complete</h2>
+      <p>
+        A QR code has no context. It does not know what site it came from, so a
+        relative path cannot resolve to anything.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Result when scanned</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>https://example.com/page</code></td>
+            <td>Opens the page. Correct.</td>
+          </tr>
+          <tr>
+            <td><code>/page</code></td>
+            <td>Treated as plain text. Nothing opens.</td>
+          </tr>
+          <tr>
+            <td><code>example.com/page</code></td>
+            <td>
+              Depends entirely on the scanner. Many display it as text rather
+              than offering to open it.
+            </td>
+          </tr>
+          <tr>
+            <td><code>www.example.com</code></td>
+            <td>Same problem — no scheme, unreliable behaviour.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Always include <code>https://</code>. If your spreadsheet holds bare
+        domains, prepend the scheme with a formula before exporting:
+        <code>="https://"&amp;A2</code>.
+      </p>
+
+      <h2>Rule 3: quote URLs containing commas</h2>
+      <p>
+        This is the classic CSV trap. A comma inside a value splits it into two
+        columns unless the value is wrapped in double quotes:
+      </p>
+      <pre><code>url,label
+"https://maps.example.com/?q=51.5074,-0.1278",london-office
+"https://example.com/search?tags=red,blue",red-blue</code></pre>
+      <p>
+        Excel and Google Sheets add these quotes automatically when they export a
+        cell containing a comma. The problem arises when the CSV is assembled by
+        hand, by a script, or by an older internal system. If your batch produces
+        codes that scan to a truncated URL, unquoted commas are the first thing
+        to check.
+      </p>
+
+      <h2>Rule 4: export as UTF-8</h2>
+      <p>
+        If any value contains an accent, an em dash, a curly quote, or non-Latin
+        script, encoding matters. In Excel choose <strong>CSV UTF-8
+        (Comma delimited)</strong> rather than plain "CSV". The plain option uses
+        a legacy regional encoding, and <code>Müller</code> arrives as
+        <code>MÃ¼ller</code> — which then sanitises into a filename nobody wants.
+      </p>
+      <p>
+        Google Sheets exports UTF-8 by default, so
+        <em>File → Download → Comma-separated values</em> is safe.
+      </p>
+
+      <h2>Semicolons and tabs are fine</h2>
+      <p>
+        In locales where the comma is the decimal separator — much of Europe —
+        Excel exports CSV files using semicolons instead:
+      </p>
+      <pre><code>url;asset_id
+https://example.com/1;A-1001</code></pre>
+      <p>
+        <strong>This works without any changes on your part.</strong> The
+        delimiter is detected automatically, so semicolon-separated and
+        tab-separated files are read correctly and your column names appear in
+        the dropdowns exactly as they should. There is no need to re-export as
+        comma-delimited or to find-and-replace anything.
+      </p>
+      <p>
+        Tab-separated data is handled the same way, which means a block of cells
+        copied straight out of a spreadsheet and saved as a
+        <code>.csv</code> file will parse correctly too.
+      </p>
+      <p>
+        The one thing to check is that your chosen delimiter does not also appear
+        <em>inside</em> an unquoted value — the same rule as commas, above.
+      </p>
+
+      <h2>Rule 5: mind the trailing blank rows</h2>
+      <p>
+        Excel frequently exports empty rows below your data, particularly if
+        cells there were ever formatted or clicked. Rows with no content are
+        filtered out, and rows with an empty URL cell are skipped during
+        generation — so blank rows are harmless, but they explain a common
+        confusion:
+      </p>
+      <p>
+        <em>"My CSV has 402 rows but I only got 400 codes."</em> Two of those
+        rows were blank, or had an empty URL. Sort by the URL column before
+        exporting and delete anything below the last real value.
+      </p>
+
+      <h2>Rule 6: strip stray whitespace</h2>
+      <p>
+        A URL with a leading or trailing space is encoded with the space
+        included, and some scanners will refuse it. Values are trimmed when read,
+        which handles the common case — but whitespace <em>inside</em> a URL
+        (from a line break pasted out of an email, say) is not something any tool
+        can safely guess at. Run <code>=TRIM(A2)</code> over a suspect column
+        before exporting.
+      </p>
+
+      <h2>What about Excel files?</h2>
+      <p>
+        <code>.xlsx</code> and <code>.xls</code> files are not supported —
+        upload requires <code>.csv</code>. Converting takes ten seconds
+        (<em>Save As</em> or <em>Download as</em>) and avoids a class of problems
+        that come with spreadsheet formats: formulas that have not been evaluated
+        to values, hidden sheets, merged cells, and number formatting that
+        displays one thing while storing another.
+      </p>
+      <div class="callout">
+        <p>
+          That last one bites people with IDs. A column of values like
+          <code>0012</code> is often stored by Excel as the number 12 and merely
+          <em>displayed</em> with leading zeros. Export to CSV and you get
+          <code>12</code>, so your filenames lose their padding. Format the
+          column as Text before entering the values, or build the string with a
+          formula.
+        </p>
+      </div>
+
+      <h2>A worked example</h2>
+      <p>
+        Here is a file exercising most of the rules at once — quoted commas, a
+        text-formatted ID with padding, and complete URLs:
+      </p>
+      <pre><code>url,room_id,floor
+https://hotel.example.com/room/0101,0101,1
+https://hotel.example.com/room/0102,0102,1
+"https://hotel.example.com/map?pin=51.5074,-0.1278",lobby,0
+https://hotel.example.com/room/0201,0201,2</code></pre>
+      <p>
+        Upload this, choose <code>url</code> as the URL column and
+        <code>room_id</code> as the filename column, and you get
+        <code>qr_0101.png</code>, <code>qr_0102.png</code>,
+        <code>qr_lobby.png</code> and <code>qr_0201.png</code>. Choosing
+        <code>floor</code> instead would produce <code>qr_1.png</code>,
+        <code>qr_1_2.png</code>, <code>qr_0.png</code>, <code>qr_2.png</code> —
+        technically fine, practically useless, which is the point made in
+        <a href="name-qr-files-from-spreadsheet-column.html"
+          >choosing a filename column</a
+        >.
+      </p>
+
+      <h2>Verifying before you commit</h2>
+      <p>
+        Open the exported CSV in a plain text editor — not Excel — before
+        uploading. Excel re-interprets the file and hides exactly the problems
+        you are looking for. A text editor shows you the literal delimiters,
+        quotes and encoding artefacts as they actually are.
+      </p>
+      <p>
+        Then test with a small file first. Export ten rows, generate, and check
+        the filenames and scan a code. Ten rows takes a minute and catches
+        everything that a four-hundred-row run would have caught expensively.
+      </p>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

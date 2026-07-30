@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>QR Codes for Asset Tags and Inventory Labels</title>
+    <meta
+      name="description"
+      content="How to build QR code asset labels from an inventory spreadsheet: what URL to encode, how big to print, and which materials survive a warehouse."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/qr-codes-for-asset-inventory-labels.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>QR codes for asset tags and inventory labels</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Asset labelling is the most common serious use of bulk QR generation. You
+        have a register — laptops, tools, lab equipment, AV kit, furniture — and
+        you want a code on each item that pulls up its record. The generation
+        part is easy. The decisions around it determine whether the labels are
+        still working in three years.
+      </p>
+
+      <h2>Decide what the code should point at</h2>
+      <p>This choice is harder to change later than any other, so take it first.</p>
+
+      <h3>Option 1: a URL into your asset system</h3>
+      <p>
+        The best option when you have a system with per-asset pages —
+        Snipe-IT, an ITSM tool, a maintenance platform, even a shared spreadsheet
+        with anchor links:
+      </p>
+      <pre><code>https://assets.example.com/asset/A-1001</code></pre>
+      <p>
+        Scanning opens the record directly. The risk is that the URL structure is
+        now baked into physical labels. If you migrate systems, every label
+        points at a dead address.
+      </p>
+
+      <h3>Option 2: a URL on a domain you control</h3>
+      <p>
+        The safer version of option 1. Encode a short URL on your own domain and
+        redirect from there:
+      </p>
+      <pre><code>https://example.com/a/A-1001</code></pre>
+      <p>
+        A migration then means updating one redirect rule instead of reprinting
+        several hundred labels. This costs nothing extra to set up now and is the
+        single best decision you can make about a QR asset programme.
+      </p>
+      <p>
+        It also produces a shorter URL, which means fewer modules in the pattern,
+        which means chunkier squares that scan more reliably at small sizes.
+      </p>
+
+      <h3>Option 3: plain text</h3>
+      <p>
+        Encoding just the asset ID with no URL works if scanning happens inside
+        an app that expects a bare identifier. It is robust — nothing to break —
+        but a phone camera will simply display the text, so it is no use to
+        anyone without your app.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Build the CSV</h2>
+      <p>
+        Export your asset register with at least the ID and the URL. If your
+        register only holds IDs, build the URL with a formula:
+        <code>="https://example.com/a/"&amp;A2</code>.
+      </p>
+      <pre><code>url,asset_id,location
+https://example.com/a/A-1001,A-1001,Workshop
+https://example.com/a/A-1002,A-1002,Workshop
+https://example.com/a/A-1003,A-1003,Lab 2</code></pre>
+      <p>
+        Upload it to the <a href="../index.html">generator</a>, select <code>url</code> as
+        the URL column and <code>asset_id</code> as the filename column. Now the
+        image files are named after the same identifier that appears in your
+        register and on the equipment itself, so reprinting a single damaged
+        label is a matter of finding one file by name.
+      </p>
+      <p>
+        Do not be tempted to name files after <code>location</code>. Assets move.
+        The point covered in
+        <a href="name-qr-files-from-spreadsheet-column.html"
+          >choosing a filename column</a
+        >
+        applies with particular force here: name after the thing, not after a
+        fact about the thing.
+      </p>
+
+      <h2>Individual files or printed sheets?</h2>
+      <p>
+        For asset labelling, <strong>1 QR code per image</strong> is usually
+        correct. Asset labels almost always go through label software — Brother
+        P-touch, Dymo, Avery templates, or a thermal printer's own tooling — and
+        those tools want to place one image per label, found by filename.
+      </p>
+      <p>
+        Set codes per image above 1 only if you are printing onto sheet stock and
+        cutting by hand. In that case leave labels switched on: a grid of
+        unlabelled QR codes is genuinely impossible to sort out once cut, and the
+        printed <code>A-1001</code> underneath each code is what lets you match
+        label to asset. See
+        <a href="print-sheet-of-identical-qr-codes.html"
+          >printing sheets of codes</a
+        >
+        for the grid sizes.
+      </p>
+
+      <h2>Print the ID in human-readable text too</h2>
+      <p>
+        Every asset label should carry the identifier as text alongside the code.
+        This is the most frequently skipped step and the most frequently
+        regretted.
+      </p>
+      <p>Reasons it matters:</p>
+      <ul>
+        <li>
+          A scratched or partly peeled code becomes unreadable. The printed ID
+          still works.
+        </li>
+        <li>
+          Stocktaking often happens on paper, or by someone without the app.
+        </li>
+        <li>
+          When someone phones to say "the projector is broken", they can read you
+          the number.
+        </li>
+      </ul>
+      <p>
+        If you generate labelled sheets, this comes for free — the label under
+        each code is the asset ID. If you use label software, add a text field
+        next to the image.
+      </p>
+
+      <h2>Size and materials</h2>
+      <p>
+        A 2 cm (0.8 in) code is comfortably scannable at arm's length for a short
+        URL. Go bigger if the assets are stored high on racking, if scanning
+        happens under poor lighting, or if the URL is long.
+      </p>
+      <p>Materials matter more than most people expect:</p>
+      <ul>
+        <li>
+          <strong>Paper labels</strong> are fine for office equipment in a dry
+          room and nowhere else.
+        </li>
+        <li>
+          <strong>Polyester or vinyl labels</strong> survive handling, cleaning
+          products and moderate abrasion. This is the default for anything in a
+          workshop or lab.
+        </li>
+        <li>
+          <strong>Laminated or over-laminated labels</strong> resist solvents and
+          UV. Necessary outdoors, where an unlaminated label will fade to
+          illegibility within a season.
+        </li>
+        <li>
+          <strong>Matte, not gloss.</strong> Glossy laminate throws glare
+          straight back at a phone camera held close.
+        </li>
+      </ul>
+      <p>
+        Whatever you choose, keep the white quiet zone around the pattern. Do not
+        crop tight to the black edge, and do not place the label so that the
+        code wraps around a corner or a curved surface — a code bent around a
+        cable or a tube will not scan.
+      </p>
+
+      <h2>Plan for reprints from day one</h2>
+      <p>
+        Labels get damaged, assets get added, and someone will eventually stick
+        one on upside down. Two habits make this painless:
+      </p>
+      <ul>
+        <li>
+          <strong>Keep the source CSV</strong> in the same place as the asset
+          register, not in someone's downloads folder. Regenerating a batch is
+          instant if you still have the file.
+        </li>
+        <li>
+          <strong>Keep the generated ZIP</strong> too. Because files are named
+          after asset IDs, reprinting one label means finding
+          <code>A-1001.png</code> — no regeneration needed.
+        </li>
+      </ul>
+      <p>
+        For new assets, generate small top-up batches with the same settings. The
+        filenames will be consistent with the originals because they come from
+        the same column of the same register.
+      </p>
+
+      <h2>Test before committing to a run</h2>
+      <p>
+        Print one label on the real material at the real size. Then scan it: in
+        the actual storage location, under the actual lighting, at the distance
+        someone will really stand. A code that scans perfectly on your monitor
+        can fail on matte vinyl in a dim store cupboard.
+      </p>
+      <div class="callout">
+        <p>
+          Check the destination too, not just that the code scans. A code that
+          resolves cleanly to a 404 is worse than no code at all, because people
+          stop trusting the system after two or three of them.
+        </p>
+      </div>
+
+      <h2>A note on privacy</h2>
+      <p>
+        Asset registers frequently contain internal hostnames, network paths and
+        equipment locations — precisely the kind of data that should not be
+        pasted into an unknown web service. Generation here happens entirely in
+        your browser: the CSV is read locally and never uploaded, which is why
+        this tool is usable on registers that would not otherwise be allowed near
+        an external site. See the <a href="../privacy.html">Privacy Policy</a> for
+        the details.
+      </p>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

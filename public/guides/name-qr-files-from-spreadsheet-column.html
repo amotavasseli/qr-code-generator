@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>How to Name QR Code Files From a Spreadsheet Column</title>
+    <meta
+      name="description"
+      content="Stop downloading 400 files called qr_code_1.png. Name each generated QR code after any column in your CSV — employee ID, SKU, room number — with an optional prefix."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/name-qr-files-from-spreadsheet-column.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to name QR code files from a spreadsheet column</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        Here is the moment that ruins an otherwise successful bulk QR job. You
+        upload 400 rows, download the ZIP, extract it — and find 400 files named
+        <code>qr_code_1.png</code> through <code>qr_code_400.png</code>. The
+        codes are correct. They are also, practically speaking, useless, because
+        matching file 287 back to row 287 of a spreadsheet you have since sorted
+        is a job nobody wants.
+      </p>
+      <p>
+        Naming files from a column of your own data fixes this at the source.
+        This guide covers how to do it and, more importantly, how to choose a
+        column that will not cause problems.
+      </p>
+
+      <h2>Doing it</h2>
+      <p>
+        Upload your CSV to the <a href="../index.html">generator</a>. Two dropdowns appear,
+        both populated with your real column headers. The second one —
+        <strong>"Column to name files after"</strong> — is the one that matters
+        here. Pick any column and every output file takes its name from that
+        row's value in that column.
+      </p>
+      <p>With this CSV:</p>
+      <pre><code>url,employee_id,department
+https://intranet.example.com/staff/10432,E10432,Sales
+https://intranet.example.com/staff/10433,E10433,Sales
+https://intranet.example.com/staff/10434,E10434,Support</code></pre>
+      <p>
+        choosing <code>employee_id</code> gives you
+        <code>E10432.png</code>, <code>E10433.png</code>,
+        <code>E10434.png</code>. Choosing <code>department</code> gives you
+        <code>Sales.png</code>, <code>Sales_2.png</code>,
+        <code>Support.png</code> — which is a good illustration of why the choice
+        of column matters.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Choosing a good column</h2>
+      <p>
+        The right column is the one you will use to look the file up later. Ask
+        yourself: when someone says "I need to reprint the code for X", what is
+        X? That is your column.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Job</th>
+            <th>Good filename column</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Asset tags</td>
+            <td>Asset ID</td>
+            <td>Matches the number stamped on the equipment</td>
+          </tr>
+          <tr>
+            <td>Event badges</td>
+            <td>Attendee ID or full name</td>
+            <td>Matches what the badge template merges on</td>
+          </tr>
+          <tr>
+            <td>Product inserts</td>
+            <td>SKU</td>
+            <td>Matches the packaging line's own reference</td>
+          </tr>
+          <tr>
+            <td>Hotel rooms</td>
+            <td>Room number</td>
+            <td>Matches the physical door</td>
+          </tr>
+          <tr>
+            <td>Property listings</td>
+            <td>MLS or listing number</td>
+            <td>Unique and already in every other system</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Avoid columns that describe categories rather than individual rows —
+        department, region, status, product type. They repeat, and while the tool
+        handles that safely, <code>Sales_37.png</code> tells you nothing about
+        which salesperson it belongs to.
+      </p>
+
+      <h2>What happens to your values</h2>
+
+      <h3>Characters get sanitised</h3>
+      <p>
+        Anything that is not a letter or a number becomes an underscore, runs of
+        underscores collapse to one, and leading and trailing underscores are
+        trimmed:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Column value</th>
+            <th>Filename</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ada@example.com</code></td>
+            <td><code>ada_example_com.png</code></td>
+          </tr>
+          <tr>
+            <td><code>Room 12-B</code></td>
+            <td><code>Room_12_B.png</code></td>
+          </tr>
+          <tr>
+            <td><code>SKU/4471 (blue)</code></td>
+            <td><code>SKU_4471_blue.png</code></td>
+          </tr>
+          <tr>
+            <td><code>  Ada Lovelace  </code></td>
+            <td><code>Ada_Lovelace.png</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        This is not fussiness. Forward slashes are path separators on macOS and
+        Linux; colons and question marks are illegal on Windows; leading spaces
+        break command-line tooling. A filename that survives every operating
+        system is worth the loss of punctuation.
+      </p>
+
+      <h3>Duplicates get a suffix</h3>
+      <p>
+        If two rows produce the same name, the second becomes
+        <code>name_2.png</code>, the third <code>name_3.png</code>, and so on.
+      </p>
+      <p>
+        This is a safety feature with real consequences. A ZIP archive cannot
+        hold two entries with the same path — the second silently replaces the
+        first. Without suffixing, a CSV with 400 rows and 30 duplicate values in
+        the filename column would produce a ZIP with 370 files, and you would
+        most likely not notice until the missing labels turned up as gaps in a
+        print run.
+      </p>
+      <p>
+        If you see unexpected <code>_2</code> suffixes, treat it as a signal that
+        your identifier column is not as unique as you assumed. That is worth
+        knowing before the codes are printed.
+      </p>
+
+      <h3>Empty values fall back to numbering</h3>
+      <p>
+        A row with a blank value in the chosen column gets
+        <code>qr_code_N.png</code>, where N is its position in the batch. The
+        code is still generated — the row is not skipped — it just has no name to
+        take.
+      </p>
+
+      <h2>Using the prefix</h2>
+      <p>
+        Once you select a filename column, a prefix field appears with
+        <code>qr_</code> in it. Whatever you put there is prepended to every
+        filename before sanitising, so <code>badge-</code> plus
+        <code>E10432</code> produces <code>badge_E10432.png</code> — note that
+        the hyphen in the prefix is sanitised along with everything else.
+      </p>
+      <p>Prefixes earn their keep in three situations:</p>
+      <ul>
+        <li>
+          <strong>Sorting.</strong> Files sharing a prefix cluster together in a
+          folder that also contains other assets.
+        </li>
+        <li>
+          <strong>Searching.</strong> Typing the prefix in a file dialog filters
+          to just this batch.
+        </li>
+        <li>
+          <strong>Batch distinction.</strong> Generating codes for two events?
+          Prefix one <code>spring_</code> and the other <code>autumn_</code> and
+          you can safely keep them in one folder.
+        </li>
+      </ul>
+      <p>
+        Clear the prefix field entirely if you want bare values —
+        <code>E10432.png</code> rather than <code>qr_E10432.png</code>. This is
+        the right choice when another system will consume the files by exact
+        name.
+      </p>
+
+      <h2>Why this matters for mail merge</h2>
+      <p>
+        The payoff for all of this is automation. Word, InDesign, LibreOffice and
+        most label software can merge an image by filename from a data field. If
+        your badge spreadsheet has an <code>attendee_id</code> column and your QR
+        images are named after that same column, the merge field can build the
+        image path directly — no manual placement, no lookup table, no
+        reconciling row numbers.
+      </p>
+      <p>
+        That only works if the names match exactly, which is the argument for
+        clearing the prefix and choosing the column your other system already
+        uses as its key.
+      </p>
+
+      <h2>Manual entry works the same way</h2>
+      <p>
+        On the "Enter manually" tab, each row has its own filename field instead
+        of a column picker. Leave it blank for numbered naming. The same
+        sanitising and duplicate rules apply — which is what makes
+        <a href="print-sheet-of-identical-qr-codes.html"
+          >a row with 20 copies</a
+        >
+        produce <code>menu.png</code> through <code>menu_20.png</code> rather
+        than a single overwritten file.
+      </p>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

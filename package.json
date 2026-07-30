@@ -2,7 +2,7 @@
   "name": "qr-code-generator",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://amotavasseli.github.io/qr-code-generator",
+  "homepage": ".",
   "dependencies": {
     "jszip": "^3.10.1",
     "papaparse": "^5.5.3",

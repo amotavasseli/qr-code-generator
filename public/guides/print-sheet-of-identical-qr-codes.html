@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>How to Print a Full Sheet of the Same QR Code</title>
+    <meta
+      name="description"
+      content="Need 20 or 40 copies of one QR code on a single page? Set a copies count and codes per image, and print the sheet directly. No design software required."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/print-sheet-of-identical-qr-codes.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to print a sheet of identical QR codes</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        There is a whole category of QR code job that has nothing to do with bulk
+        <em>data</em>: one URL, printed many times. A menu code for every table
+        in a restaurant. A review link for a stack of receipts. A wifi code for
+        each room. A feedback form on the bottom of a hundred flyers.
+      </p>
+      <p>
+        The usual approach is to generate one code, drop it into a Word document,
+        and copy-paste it into a grid by hand — which is tedious and produces
+        wildly inconsistent spacing. The
+        <a href="../index.html">generator on this site</a> has a copies field for exactly
+        this.
+      </p>
+
+      <h2>The short version</h2>
+      <ol>
+        <li>Open the generator and switch to the <strong>Enter manually</strong> tab.</li>
+        <li>Paste your URL into the first row.</li>
+        <li>Set <strong>Copies</strong> to how many you want on the sheet — say 20.</li>
+        <li>Set <strong>QR codes per image</strong> to the same number, 20.</li>
+        <li>Generate. You get one PNG containing a 5 × 4 grid of that code.</li>
+      </ol>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Why both numbers</h2>
+      <p>
+        The two settings do different jobs, and understanding the split is what
+        makes the tool flexible:
+      </p>
+      <ul>
+        <li>
+          <strong>Copies</strong> controls how many QR codes exist. Twenty copies
+          means twenty codes in the batch.
+        </li>
+        <li>
+          <strong>QR codes per image</strong> controls how they are packed onto
+          pages. Twenty per image puts all twenty on one sheet; ten per image
+          would give you two sheets of ten.
+        </li>
+      </ul>
+      <p>
+        So if you want <em>two</em> pages of twenty, set copies to 40 and codes
+        per image to 20. If you want twenty separate image files of the same code
+        — occasionally useful when a design tool wants individual assets — set
+        copies to 20 and leave codes per image at 1.
+      </p>
+
+      <h2>Choosing a grid that matches your paper</h2>
+      <p>
+        Codes are arranged in as close to a square as the count allows: the
+        layout uses the square root of the number of codes, rounded up, as the
+        column count. In practice:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Codes per image</th>
+            <th>Grid</th>
+            <th>Typical use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4</td>
+            <td>2 × 2</td>
+            <td>Large table tents, window signs</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>3 × 2</td>
+            <td>Half-page handouts</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>3 × 3</td>
+            <td>Postcard-sized cuts</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>4 × 3</td>
+            <td>Standard label sheets</td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>5 × 4</td>
+            <td>Small stickers, receipt inserts</td>
+          </tr>
+          <tr>
+            <td>30</td>
+            <td>6 × 5</td>
+            <td>Shelf-edge labels</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Each cell is 300 × 300 pixels, plus a 44-pixel strip underneath for the
+        label if labels are on. A 20-code sheet is therefore 1500 × 1376 pixels,
+        which prints crisply at A4 or US Letter.
+      </p>
+
+      <h2>Labels: on or off</h2>
+      <p>
+        When more than one code goes on an image, a checkbox appears:
+        <strong>"Print a label under each QR code"</strong>. It is on by default,
+        and it prints the row's filename underneath each code — or the URL itself
+        if you did not give the row a name.
+      </p>
+      <p>
+        For a sheet of <em>identical</em> codes, labels are usually the wrong
+        choice. Every cell would carry the same text, which wastes space and
+        looks odd on a table tent. Untick it and the label strip disappears
+        entirely rather than being left blank — a 20-code sheet drops from 1376
+        to 1200 pixels tall.
+      </p>
+      <p>
+        Leave labels on when the sheet has <em>different</em> codes on it, which
+        is the case covered in
+        <a href="bulk-qr-codes-from-csv.html"
+          >generating codes in bulk from a CSV</a
+        >. There, the label is the only thing that tells you which cut-out square
+        is which.
+      </p>
+
+      <h2>Mixing repeats and unique codes</h2>
+      <p>
+        Copies are set per row, so a single batch can contain both. A restaurant
+        might want ten copies of the menu code and one code per table:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Filename</th>
+            <th>Copies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>https://example.com/menu</td>
+            <td>menu</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>https://example.com/table/1</td>
+            <td>table-01</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>https://example.com/table/2</td>
+            <td>table-02</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        With one code per image that produces twelve files:
+        <code>menu.png</code>, <code>menu_2.png</code> through
+        <code>menu_10.png</code>, then <code>table_01.png</code> and
+        <code>table_02.png</code>. The numeric suffixes come from the duplicate
+        handling, which keeps every copy as its own file instead of overwriting.
+      </p>
+
+      <h2>Printing the sheet</h2>
+      <p>
+        The output is a PNG inside the downloaded ZIP. Extract it and print it
+        directly from your image viewer, or drop it into a document if you need
+        margins and crop marks.
+      </p>
+      <p>Three things worth getting right:</p>
+      <ul>
+        <li>
+          <strong>Print at 100%, not "fit to page"</strong> if you care about the
+          finished size. Scaling is safe for QR codes — they are pure black and
+          white — but "fit to page" quietly changes your cut dimensions.
+        </li>
+        <li>
+          <strong>Keep the quiet zone.</strong> The generated codes already
+          include the required white margin around the pattern. Do not crop
+          tightly to the black edge when cutting; scanners need that white border
+          to find the code.
+        </li>
+        <li>
+          <strong>Black on white, matte if possible.</strong> Glossy stock
+          throws glare that defeats phone cameras at close range.
+        </li>
+      </ul>
+
+      <h2>How small can they go?</h2>
+      <p>
+        The practical floor for a phone camera is around 2 cm (0.8 in) square for
+        a short URL scanned at arm's length. Longer URLs pack more modules into
+        the same square, making each module smaller, so a long tracking URL needs
+        a physically larger code than a short one.
+      </p>
+      <p>
+        The rule of thumb used in signage is that the code should be about a
+        tenth of the scanning distance: readable from 1 metre means roughly 10 cm
+        square. If your codes will be scanned from across a room, generate fewer
+        per image so each one prints larger.
+      </p>
+      <p>
+        Shortening the URL is the cheapest way to make a code more scannable. A
+        code encoding <code>https://ex.co/m</code> has far fewer modules — and
+        therefore much chunkier, more forgiving squares — than one encoding a URL
+        with a long query string attached.
+      </p>
+
+      <div class="callout">
+        <p>
+          Always scan-test one printed code at the real size, on the real paper,
+          under the lighting where it will live. A code that scans perfectly on a
+          monitor can fail on matte recycled stock in a dim corridor.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

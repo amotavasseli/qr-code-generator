@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>How to Generate Bulk QR Codes as SVG (Vector) Files</title>
+    <meta
+      name="description"
+      content="Generate QR codes as SVG instead of PNG, in bulk, for free. Why vector matters for print, when PNG is the better choice, and how to use SVG codes in design software."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/bulk-qr-codes-as-svg.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to generate bulk QR codes as SVG files</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        If your QR codes are going to a printer, a sign maker, or into InDesign,
+        you want SVG rather than PNG. This guide covers how to get vector output
+        in bulk, what the difference actually means in practice, and when PNG is
+        the right answer instead.
+      </p>
+
+      <h2>Doing it</h2>
+      <ol>
+        <li>
+          Provide your URLs on the <a href="../index.html">generator</a> — CSV
+          upload, the manual form, or by pasting a list.
+        </li>
+        <li>Leave <strong>QR codes per image</strong> at 1.</li>
+        <li>Set <strong>File format</strong> to <em>SVG</em>.</li>
+        <li>Generate. The ZIP contains one <code>.svg</code> per URL.</li>
+      </ol>
+      <p>
+        Filenames work exactly as they do for PNG — chosen column, optional
+        prefix, duplicate suffixing — just with an <code>.svg</code> extension.
+        See
+        <a href="name-qr-files-from-spreadsheet-column.html"
+          >naming files from a spreadsheet column</a
+        >.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Why vector matters for QR codes</h2>
+      <p>
+        A PNG is a grid of pixels. A 300 × 300 PNG contains exactly 300 × 300
+        pixels of information, and enlarging it means inventing the pixels in
+        between — which softens the edges of every module in the pattern.
+      </p>
+      <p>
+        An SVG is a set of instructions: draw a black square here, another there.
+        Rendered at 2 cm or 2 metres, the edges are computed fresh and stay
+        perfectly sharp. The file is also usually smaller — a QR code is a few
+        hundred rectangles, which compresses to a couple of kilobytes.
+      </p>
+      <p>For QR codes specifically, three consequences follow:</p>
+      <ul>
+        <li>
+          <strong>One file works at every size.</strong> The same SVG serves a
+          business card and a shop window. No regenerating at a larger size, no
+          decision about resolution up front.
+        </li>
+        <li>
+          <strong>Print shops stop asking questions.</strong> Vector artwork is
+          what commercial printing expects. Supplying a PNG invites the "do you
+          have this in vector?" email.
+        </li>
+        <li>
+          <strong>Crisp edges scan better.</strong> Scanners look for hard
+          transitions between light and dark modules. A resampled, slightly
+          blurry PNG enlarged for a poster is measurably harder to read than
+          vector output at the same size.
+        </li>
+      </ul>
+
+      <h2>When PNG is the better choice</h2>
+      <p>SVG is not automatically correct. Choose PNG when:</p>
+      <ul>
+        <li>
+          <strong>You are putting codes on a printed sheet.</strong> Combined
+          sheets — several codes arranged in a labelled grid — are composed as a
+          raster image, so SVG is unavailable when "QR codes per image" is above
+          1. See
+          <a href="print-sheet-of-identical-qr-codes.html"
+            >printing sheets of QR codes</a
+          >.
+        </li>
+        <li>
+          <strong>The destination is a web page or an email.</strong> PNG is
+          universally supported in email clients; SVG is not.
+        </li>
+        <li>
+          <strong>Your label software will not take SVG.</strong> Plenty of
+          thermal label printers and older badge tools accept PNG only. Check
+          before generating four hundred files in the wrong format.
+        </li>
+        <li>
+          <strong>Someone downstream will open it in Word.</strong> Word's SVG
+          support exists but is inconsistent across versions.
+        </li>
+      </ul>
+      <div class="callout">
+        <p>
+          Unsure? Generate both. The batch takes seconds and costs nothing, and
+          having a PNG alongside each SVG saves a round trip when a supplier
+          turns out to want the other one.
+        </p>
+      </div>
+
+      <h2>Using SVG QR codes in design software</h2>
+
+      <h3>Adobe Illustrator and InDesign</h3>
+      <p>
+        Place the SVG as you would any vector asset. In Illustrator it arrives as
+        editable paths, which means you can recolour the pattern — though see the
+        warning below about contrast. In InDesign, use a data merge with a path
+        column if you are placing hundreds of codes onto per-record layouts.
+      </p>
+
+      <h3>Figma, Sketch, Affinity</h3>
+      <p>
+        Drag the file in. All three import SVG as vector shapes. Group before
+        scaling so the modules stay aligned relative to each other.
+      </p>
+
+      <h3>Web pages</h3>
+      <p>
+        Reference it with an <code>&lt;img&gt;</code> tag or inline the markup
+        directly. Inlining lets CSS reach the shapes, which is occasionally handy
+        for dark-mode variants — though again, contrast rules apply.
+      </p>
+
+      <h3>Command-line conversion</h3>
+      <p>
+        Need a PDF or a high-resolution raster from the SVG afterwards, tools
+        like <code>rsvg-convert</code> or <code>inkscape --export-type=pdf</code>
+        handle a whole folder in one pass. Because filenames carry your
+        identifiers, the converted files keep them.
+      </p>
+
+      <h2>Things people get wrong with vector QR codes</h2>
+
+      <h3>Recolouring until contrast fails</h3>
+      <p>
+        Editable paths tempt people into brand colours. Scanners need strong
+        contrast between the dark modules and the light background — dark on
+        light, with real separation. A mid-grey code on a pale-yellow background
+        may look pleasant and fail on half the phones that try it.
+      </p>
+
+      <h3>Cropping the quiet zone</h3>
+      <p>
+        The generated SVG includes the white margin the specification requires.
+        It is not decoration. Trimming to the black edge in a design tool is one
+        of the most common causes of a code that "worked on screen" and fails in
+        print.
+      </p>
+
+      <h3>Distorting the aspect ratio</h3>
+      <p>
+        Scale proportionally, always. A QR code stretched even slightly out of
+        square confuses the module grid that scanners reconstruct.
+      </p>
+
+      <h3>Assuming vector fixes a long URL</h3>
+      <p>
+        Vector output keeps edges sharp, but it does not reduce the number of
+        modules. A long tracking URL still produces a dense pattern that needs
+        physical size to be scannable. Shorten the URL — that is the only real
+        fix. The same point comes up in
+        <a href="qr-codes-for-asset-inventory-labels.html">asset labelling</a>,
+        where redirecting through a short URL on your own domain solves both this
+        and the problem of changing destinations later.
+      </p>
+
+      <h2>Error correction and vector output</h2>
+      <p>
+        The error-correction setting applies to SVG exactly as it does to PNG —
+        it changes the pattern itself, not the file format. If the codes are
+        going onto something that will be handled, scuffed, or partly obscured by
+        a logo, raise the level. See
+        <a href="qr-code-error-correction-levels.html"
+          >error correction levels explained</a
+        >.
+      </p>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
