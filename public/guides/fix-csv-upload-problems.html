@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>Fixing CSV Upload Problems in the Bulk QR Code Generator</title>
+    <meta
+      name="description"
+      content="Every error message the CSV upload can show, what each one actually means, and how to fix it — plus the silent problems that generate the wrong codes without warning."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/fix-csv-upload-problems.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>Fixing CSV upload problems</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        The CSV upload tells you when something is wrong, but the messages are
+        short. Here is what each one actually means and how to fix it — followed
+        by the more dangerous category: problems that produce no error at all and
+        quietly generate the wrong codes.
+      </p>
+
+      <h2>"Please upload a file with a .csv extension"</h2>
+      <p>
+        The file does not end in <code>.csv</code>. Almost always it is still an
+        <code>.xlsx</code>, <code>.xls</code> or <code>.numbers</code> file —
+        spreadsheet apps do not convert on rename.
+      </p>
+      <p>
+        Use <strong>File → Save As</strong> or <strong>Export</strong> and pick
+        <strong>CSV</strong> explicitly. In Google Sheets it is
+        <strong>File → Download → Comma-separated values</strong>.
+      </p>
+      <p>
+        If it genuinely is comma-separated text with a different extension — a
+        <code>.txt</code> export — renaming it to <code>.csv</code> is fine.
+      </p>
+
+      <h2>"No data found in CSV file"</h2>
+      <p>The file parsed but produced no usable rows. Usually one of:</p>
+      <ul>
+        <li>
+          <strong>No header row.</strong> The first line must contain column
+          names, because that is what the column dropdowns are built from. A file
+          starting straight into URLs loses its first URL to the header.
+        </li>
+        <li>
+          <strong>The export is empty.</strong> Exporting while a filter is active
+          can produce a file with headers and nothing else. Clear filters and
+          re-export.
+        </li>
+        <li>
+          <strong>Only blank rows.</strong> Rows where every cell is empty are
+          discarded; if that is all there is, nothing remains.
+        </li>
+        <li>
+          <strong>A stray character before the header.</strong> A blank first line
+          or a leftover title row makes the parser read that as the header.
+        </li>
+      </ul>
+      <p>
+        Open the file in a plain text editor rather than a spreadsheet. The first
+        line should be your column names and the second should be real data.
+        <a href="csv-format-for-bulk-qr-codes.html">CSV formatting</a> covers what
+        a clean file looks like.
+      </p>
+
+      <h2>"Error parsing CSV: ..."</h2>
+      <p>
+        The parser hit something it could not resolve, and the rest of the message
+        comes from the parser itself. The usual causes are structural:
+      </p>
+      <ul>
+        <li>
+          <strong>Unbalanced quotes.</strong> One field opens a quote and never
+          closes it, so everything after is swallowed into a single value. This
+          is the most common structural break.
+        </li>
+        <li>
+          <strong>Mixed line endings</strong> from a file edited on several
+          machines.
+        </li>
+        <li>
+          <strong>Not actually a CSV</strong> — an HTML page or spreadsheet binary
+          saved with the wrong extension.
+        </li>
+      </ul>
+      <p>Re-exporting cleanly from the spreadsheet fixes nearly all of these.</p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>"Please choose which column contains the URLs"</h2>
+      <p>
+        No URL column is selected. The tool guesses on upload — it looks for a
+        column called exactly <code>url</code> or <code>link</code>, and falls
+        back to the first column — so this normally resolves itself.
+      </p>
+      <p>
+        If it did not, the dropdown is showing something unexpected. Name the
+        column <code>url</code> in your spreadsheet and the guess will land next
+        time.
+      </p>
+
+      <h2>"No URLs found in the ... column"</h2>
+      <p>
+        The chosen column exists but every cell in it is empty. Two things cause
+        this far more than any other:
+      </p>
+      <ul>
+        <li>
+          <strong>The wrong column is selected.</strong> Check the dropdown against
+          your actual header names — easy to mix up when several columns have
+          similar names.
+        </li>
+        <li>
+          <strong>The column holds formulas, not values.</strong> If your URLs are
+          built with <code>CONCATENATE</code> or <code>=&nbsp;"https://..."&amp;A2</code>,
+          some export paths write the formula rather than the result. Copy the
+          column and <strong>Paste Special → Values only</strong> before
+          exporting.
+        </li>
+      </ul>
+
+      <h2>The silent problems</h2>
+      <p>
+        These generate a full batch with no warning at all. They are worth
+        checking before a large run, because the codes look perfectly fine and
+        point at the wrong place.
+      </p>
+
+      <h3>URLs missing their protocol</h3>
+      <p>
+        <code>example.com/page</code> encodes as plain text. Many scanners will
+        not offer to open it, so the code appears broken to a user while scanning
+        correctly. Every URL needs <code>https://</code>.
+      </p>
+      <p>
+        Check with a formula before exporting:
+        <code>=IF(LEFT(A2,4)="http","ok","MISSING")</code> and filter for
+        <code>MISSING</code>.
+      </p>
+
+      <h3>URLs split across columns</h3>
+      <p>
+        A URL containing a comma, exported without quoting, splits into two
+        columns. The URL column then holds a truncated fragment and everything
+        after the comma has shifted right. Codes generate happily and point
+        nowhere useful.
+      </p>
+      <p>
+        Spreadsheet exports normally quote these correctly. Hand-assembled files
+        often do not. If your URLs contain commas, confirm they are quoted in the
+        raw file, or percent-encode the comma as <code>%2C</code>.
+      </p>
+
+      <h3>Trailing whitespace</h3>
+      <p>
+        A trailing space survives into the encoded value. Some servers tolerate
+        it; some return a 404. Run <code>TRIM()</code> over the column before
+        exporting.
+      </p>
+
+      <h3>Smart quotes and en-dashes</h3>
+      <p>
+        URLs pasted through a word processor pick up curly quotes and en-dashes
+        substituted for hyphens. They look almost identical and are different
+        characters entirely. Build URLs in the spreadsheet, not in a document.
+      </p>
+
+      <h3>Filenames colliding</h3>
+      <p>
+        If the column you name files after has duplicates, the second gets
+        <code>_2</code>, the third <code>_3</code>, and so on. Nothing is
+        overwritten — but the numbering is by order of appearance, so
+        <code>lavender.png</code> and <code>lavender_2.png</code> are not
+        self-explanatory later. Pick a column that is genuinely unique, like a SKU
+        or ID. See
+        <a href="name-qr-files-from-spreadsheet-column.html">naming files from a
+        column</a>.
+      </p>
+
+      <h2>The check that catches all of this</h2>
+      <p>
+        Before generating hundreds of codes, generate <strong>three</strong>.
+        Delete all but the first three rows, run it, and scan each code from the
+        ZIP.
+      </p>
+      <p>Thirty seconds of work confirms:</p>
+      <ul>
+        <li>The right column was encoded</li>
+        <li>The URLs resolve to real pages</li>
+        <li>Filenames come out as expected</li>
+        <li>Size and format are what you wanted</li>
+      </ul>
+      <p>
+        Then run the full file. This catches every silent failure above, which is
+        the entire category that error messages cannot help you with.
+      </p>
+
+      <div class="callout">
+        <p>
+          If the count in the status message does not match the rows in your
+          spreadsheet, stop and find out why before generating. A mismatch always
+          means something was dropped or misread.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

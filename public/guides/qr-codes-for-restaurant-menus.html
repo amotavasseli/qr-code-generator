@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>QR Codes for Restaurant Menus and Table Tents</title>
+    <meta
+      name="description"
+      content="Making menu QR codes that survive a dining room: sizing for a seated diner, per-table codes, matte lamination, and keeping the destination editable when the menu changes."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/qr-codes-for-restaurant-menus.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>QR codes for restaurant menus and table tents</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Menu codes fail in ways that are specific to dining rooms: dim lighting,
+        glossy lamination under downlights, codes printed small to keep the table
+        tent elegant, and a menu URL that changes the week after printing. Each
+        has a straightforward fix if you decide it before the print run.
+      </p>
+
+      <h2>Decide what the code points at first</h2>
+      <p>
+        This decision constrains everything else, so make it before you generate
+        anything.
+      </p>
+      <p>
+        <strong>Do not encode the menu URL directly.</strong> Menus change —
+        seasonally, or because the PDF got re-uploaded and the link now ends in
+        <code>-v3-final</code>. A static code pointing at that URL is dead the
+        moment it moves, and you reprint every table tent.
+      </p>
+      <p>
+        Point codes at a short path on your own domain —
+        <code>https://yourplace.co/menu</code> — and redirect from there to
+        wherever the menu currently lives. Changing the menu becomes a
+        configuration change instead of a reprint.
+        <a href="static-vs-dynamic-qr-codes.html">Static versus dynamic codes</a>
+        covers why this beats a paid dynamic-code subscription.
+      </p>
+      <p>Same reasoning applies to lunch and dinner menus, wine lists, and specials.</p>
+
+      <h2>One code, or one per table?</h2>
+      <p>
+        If every table gets the same menu, one code repeated is all you need.
+        Generate it once and print a sheet:
+      </p>
+      <ul>
+        <li>Choose <strong>Enter manually</strong></li>
+        <li>Enter the URL and set <strong>Copies</strong> to the number of tables</li>
+        <li>Set <strong>QR codes per image</strong> to fill your sheet</li>
+      </ul>
+      <p>
+        <a href="print-sheet-of-identical-qr-codes.html">Printing a sheet of
+        identical codes</a> covers that in full.
+      </p>
+      <p>
+        Per-table codes are worth it if you want table numbers attached — for
+        order-to-table service, or to know which tables actually scan. Then each
+        table gets
+        <code>https://yourplace.co/menu?t=12</code>, and a spreadsheet of table
+        numbers becomes a
+        <a href="bulk-qr-codes-from-csv.html">CSV run</a>. Name the files after
+        the table number so the pile of printed cards is sortable —
+        <a href="name-qr-files-from-spreadsheet-column.html">naming files from a
+        column</a> explains how.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Size it for someone sitting down</h2>
+      <p>
+        A seated diner holds a phone roughly 30 to 45 cm from a table tent. At
+        the 10:1 rule that is a <strong>4 cm code minimum</strong>, and 4.5 cm is
+        more comfortable.
+      </p>
+      <p>
+        Codes on wall-mounted signage or a chalkboard read from two metres need
+        20 cm — an entirely different job from the same URL.
+        <a href="qr-code-size-for-printing.html">Sizing for print</a> has the
+        conversions; for a 4.5 cm table tent code, generate at
+        <strong>600 px</strong>.
+      </p>
+      <p>
+        Resist making it smaller for the sake of the design. A tasteful 2 cm code
+        that half your tables cannot scan in evening light generates more staff
+        interruptions than a slightly larger one ever will.
+      </p>
+
+      <h2>Lighting and lamination</h2>
+      <p>This is where menu codes fail most often, and it is entirely avoidable.</p>
+      <ul>
+        <li>
+          <strong>Specify matte lamination.</strong> Gloss reflects overhead
+          lighting straight into the camera. Restaurants have downlights directly
+          above tables, which is close to the worst case for a glossy surface.
+        </li>
+        <li>
+          <strong>Test in evening light, not daylight.</strong> A code that scans
+          in a bright empty room at 3pm can fail at 8pm with the lights down. Test
+          under service conditions.
+        </li>
+        <li>
+          <strong>Keep the code flat.</strong> Codes wrapped around a curved
+          holder or on a folded edge distort the pattern.
+        </li>
+        <li>
+          <strong>Use error correction level Q.</strong> Table tents get handled,
+          spilled on and wiped down constantly. See
+          <a href="qr-code-error-correction-levels.html">error correction
+          levels</a>.
+        </li>
+      </ul>
+
+      <h2>Tell people what it is</h2>
+      <p>
+        A bare code on a table tent is ambiguous — diners have been trained to
+        expect ordering systems, payment links and marketing signups. Label it
+        plainly:
+      </p>
+      <ul>
+        <li><strong>"Scan for menu"</strong>, not "Scan here"</li>
+        <li>Print the short URL underneath as a fallback — <code>yourplace.co/menu</code></li>
+        <li>Say if there is no app or signup involved. It measurably reduces hesitation.</li>
+      </ul>
+      <p>
+        The visible URL matters more than it seems. Phones preview the destination
+        before opening it, and a recognisable name is far more likely to get
+        tapped than an unfamiliar shortener.
+      </p>
+
+      <h2>Keep paper menus</h2>
+      <p>
+        A code-only menu excludes anyone with a flat battery, an older phone, poor
+        eyesight, or no data signal — and several jurisdictions now require an
+        accessible alternative. Keep a handful of printed menus regardless of what
+        the regulations say where you are. This is a service question before it is
+        a compliance one.
+      </p>
+
+      <h2>Before the print run</h2>
+      <ol>
+        <li>Print <strong>one</strong> table tent at final size on final stock</li>
+        <li>Put it on a real table during evening service</li>
+        <li>Scan it sitting down, from a normal posture</li>
+        <li>Try an older phone, not just the newest one behind the bar</li>
+        <li>Confirm the menu page works on a phone — most PDF menus do not</li>
+      </ol>
+      <p>
+        That last point sinks more menu rollouts than any scanning problem. A
+        desktop-sized PDF that opens as an unreadable full-page zoom is worse than
+        no code at all. Check the destination on a phone before printing anything.
+      </p>
+
+      <div class="callout">
+        <p>
+          The most common menu-code failure is not the code — it is a URL that
+          moved. Route every code through a path you control, and a menu change
+          never becomes a reprint.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

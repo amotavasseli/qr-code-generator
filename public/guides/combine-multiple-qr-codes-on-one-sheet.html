@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>How to Put Multiple Different QR Codes on One Sheet</title>
+    <meta
+      name="description"
+      content="How the QR codes per image setting builds a labelled contact sheet from different URLs, how the grid is chosen, and when individual files are the better answer."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/combine-multiple-qr-codes-on-one-sheet.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to put multiple different QR codes on one sheet</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        Individual files are right when each code goes somewhere different — into
+        a label template, a mail merge, a design file. But when you want to print
+        and cut, forty separate PNGs is forty placements. Setting
+        <strong>QR codes per image</strong> above 1 combines them into labelled
+        sheets instead, ready to print directly.
+      </p>
+      <p>
+        This is the sibling of
+        <a href="print-sheet-of-identical-qr-codes.html">printing a sheet of
+        identical codes</a>. That guide covers many copies of
+        <em>one</em> URL. This one covers many <em>different</em> URLs on a shared
+        sheet — a contact sheet.
+      </p>
+
+      <h2>Doing it</h2>
+      <ol>
+        <li>Load your URLs by any of the three input methods</li>
+        <li>Set <strong>QR codes per image</strong> to how many you want per sheet</li>
+        <li>Leave <strong>Print a label under each QR code</strong> ticked</li>
+        <li>Choose the size of each individual code, not the sheet</li>
+        <li>Generate</li>
+      </ol>
+      <p>
+        The ZIP contains <code>qr_codes_batch_1.png</code>,
+        <code>qr_codes_batch_2.png</code> and so on. Codes are distributed in
+        order: with 50 URLs and 12 per image you get four full sheets and a fifth
+        holding the last two.
+      </p>
+
+      <h2>How the grid gets chosen</h2>
+      <p>
+        The layout is worked out for you, aiming at square. The number of columns
+        is the square root of the count, rounded up, and rows follow from that.
+        Which produces:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Codes per image</th>
+            <th>Grid</th>
+            <th>Shape</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>4</td><td>2 × 2</td><td>Square</td></tr>
+          <tr><td>6</td><td>3 × 2</td><td>Landscape</td></tr>
+          <tr><td>9</td><td>3 × 3</td><td>Square</td></tr>
+          <tr><td>12</td><td>4 × 3</td><td>Landscape</td></tr>
+          <tr><td>16</td><td>4 × 4</td><td>Square</td></tr>
+          <tr><td>20</td><td>5 × 4</td><td>Landscape</td></tr>
+          <tr><td>25</td><td>5 × 5</td><td>Square</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Perfect squares — 4, 9, 16, 25 — give clean square sheets. Other numbers
+        give a wider-than-tall grid with the last row partly empty if the count
+        does not divide evenly.
+      </p>
+      <p>
+        There is no way to force a specific column count, so pick a per-image
+        number whose natural grid suits your paper. For portrait A4 or Letter,
+        12 (4 × 3) and 20 (5 × 4) both sit well.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Labels are what make this usable</h2>
+      <p>
+        Twelve QR codes on a page are visually identical. Without labels you
+        cannot tell which is which, and you cannot check a sheet before cutting
+        it. The label strip is the reason this feature is worth using.
+      </p>
+      <p>Each label shows the filename you supplied, falling back to the URL if you did not supply one.</p>
+      <p>
+        That fallback is worth planning around. A full URL under a small code
+        gets truncated with an ellipsis when it does not fit, so a set of long
+        URLs sharing a prefix can produce labels that all read
+        <code>https://example.com/very-lo…</code> and distinguish nothing. Supply
+        short, meaningful filenames — <code>room-101</code>,
+        <code>badge-ada</code> — and the sheet becomes checkable at a glance.
+      </p>
+      <p>
+        The label strip scales with the code size, so text stays proportional at
+        300, 600 or 1000 px.
+      </p>
+
+      <h2>SVG is not available here</h2>
+      <p>
+        Combined sheets are composed on a canvas, which is a raster surface, so
+        the output is always PNG. The format selector disables itself when codes
+        per image is above 1 and tells you why.
+      </p>
+      <p>
+        If you need vector output — for large-format printing, or because your
+        print shop asked for it — set codes per image back to 1, generate
+        <a href="bulk-qr-codes-as-svg.html">individual SVG files</a>, and lay them
+        out in your design software. You get vector quality and full control of
+        the grid, at the cost of doing the placement yourself.
+      </p>
+
+      <h2>Choosing the size of each code</h2>
+      <p>
+        The size setting controls each individual code, not the finished sheet, so
+        the sheet's pixel dimensions are the code size multiplied by the grid.
+        Nine codes at 600 px produce an image around 1800 px across.
+      </p>
+      <p>
+        Work from the finished physical size. If each code needs to be 2.5 cm on
+        the printed page, 300 px is right at 300 DPI —
+        <a href="qr-code-size-for-printing.html">sizing for print</a> has the
+        arithmetic. Choosing 1000 px for a code that will print at 2.5 cm produces
+        an enormous file for no benefit.
+      </p>
+
+      <h2>When individual files are better</h2>
+      <p>Combined sheets are the wrong choice when:</p>
+      <ul>
+        <li>
+          <strong>The codes go into a template.</strong> Avery label sheets, badge
+          templates and mail merges all want one file per record.
+        </li>
+        <li>
+          <strong>The codes are used in different places.</strong> A sheet is one
+          image; you cannot easily extract a single code from it later.
+        </li>
+        <li>
+          <strong>You need vector.</strong> As above.
+        </li>
+        <li>
+          <strong>Different codes need different settings.</strong> All settings
+          apply to the whole batch, so split the run instead.
+        </li>
+      </ul>
+      <p>
+        The reverse case — print, cut, and hand out — is exactly what sheets are
+        for. Workshop station codes, shelf-edge labels, classroom desk tags,
+        market stall signage.
+      </p>
+
+      <h2>Print the sheet without resizing it</h2>
+      <p>
+        Set your PDF or print dialog to <strong>100% / actual size</strong>. "Fit
+        to page" silently rescales, which changes the physical size of every code
+        and can push small ones under the reliable threshold. Turn off any
+        "shrink to fit margins" option too.
+      </p>
+      <p>
+        Print one sheet, scan two or three codes from it at the real distance, and
+        confirm the labels match where they actually go before running the rest.
+      </p>
+
+      <div class="callout">
+        <p>
+          Codes fill the grid in input order, so sort your spreadsheet before
+          generating. Sorted input means sheet 1 holds rooms 101–112, which is
+          much easier to distribute than an arbitrary scattering.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
