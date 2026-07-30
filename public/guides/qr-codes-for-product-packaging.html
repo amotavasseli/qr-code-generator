@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>QR Codes for Product Packaging and Labels</title>
+    <meta
+      name="description"
+      content="Generating per-SKU QR codes for packaging: sizing for small labels, printing on curved and absorbent surfaces, vector output for print shops, and planning for long shelf lives."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/qr-codes-for-product-packaging.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>QR codes for product packaging and labels</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Packaging is the least forgiving place to put a QR code. The space is
+        small, the surface is often curved or absorbent, the print run is large
+        enough that mistakes are expensive, and the code may need to still work
+        in three years. This guide covers generating a set of per-SKU codes that
+        survive all of that.
+      </p>
+
+      <h2>Decide what each code does</h2>
+      <p>Packaging codes usually serve one of a few purposes, and they size differently:</p>
+      <ul>
+        <li>
+          <strong>Product information</strong> — ingredients, allergens,
+          instructions, sourcing. Regulation increasingly permits or expects this,
+          and it frees space on the physical label.
+        </li>
+        <li>
+          <strong>Registration or warranty.</strong> One destination for every
+          unit; the customer enters the serial themselves.
+        </li>
+        <li>
+          <strong>Per-unit serialisation</strong> — a unique code per item, for
+          authentication or traceability. A different and much larger job.
+        </li>
+        <li>
+          <strong>Reorder or subscription.</strong> Straight to a cart.
+        </li>
+      </ul>
+      <p>
+        Most of the time you want <strong>one code per SKU</strong>, not per unit.
+        Per-unit serialisation means variable-data printing at the press, which is
+        a conversation with your printer rather than a batch of image files.
+      </p>
+
+      <h2>Always route through your own domain</h2>
+      <p>
+        Packaging has a long life. A carton printed today may sit in a warehouse
+        for a year and on a shelf for another two. Whatever the code points at
+        must still resolve then.
+      </p>
+      <p>
+        Encode <code>https://brand.co/p/SKU123</code> and redirect from there.
+        When the product page moves — a replatform, a rebrand, a new CMS — you
+        update a redirect instead of pulping inventory. Codes pointing directly at
+        <code>shop.brand.co/collections/summer/products/sku-123</code> are one
+        migration away from worthless.
+        <a href="static-vs-dynamic-qr-codes.html">Static versus dynamic codes</a>
+        covers the reasoning; the short version is that you want the editable
+        destination without a subscription that can lapse.
+      </p>
+      <p>Short paths also produce sparser codes, which matters enormously at label sizes.</p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Generating the set</h2>
+      <p>Export a CSV with one row per SKU:</p>
+      <pre><code>sku,url,product
+SKU123,https://brand.co/p/SKU123,Lavender Soap 100g
+SKU124,https://brand.co/p/SKU124,Cedar Soap 100g
+SKU125,https://brand.co/p/SKU125,Citrus Soap 100g</code></pre>
+      <p>Then in the generator:</p>
+      <ul>
+        <li><strong>Column containing URLs:</strong> <code>url</code></li>
+        <li><strong>Column to name files after:</strong> <code>sku</code></li>
+        <li><strong>File format:</strong> SVG</li>
+        <li><strong>QR codes per image:</strong> 1</li>
+      </ul>
+      <p>
+        You get <code>qr_SKU123.svg</code> and so on — files your designer or
+        printer can drop straight into artwork without matching them up by hand.
+        The <a href="bulk-qr-codes-from-csv.html">CSV walkthrough</a> covers the
+        general case, and
+        <a href="csv-format-for-bulk-qr-codes.html">CSV formatting</a> covers
+        getting a clean export.
+      </p>
+
+      <h2>Use SVG, not PNG</h2>
+      <p>
+        Packaging goes to a commercial printer, and print shops want vector. An
+        <a href="bulk-qr-codes-as-svg.html">SVG</a> scales to any size with no
+        resampling, prints crisply at 300 or 2400 DPI, and can be placed at
+        whatever physical dimension the artwork calls for without a conversation
+        about resolution.
+      </p>
+      <p>
+        A PNG placed at 1.5 cm and printed at press resolution is the most common
+        way a packaging code ends up soft-edged. Ink spread then thickens the
+        modules further and the code stops scanning reliably — a failure you
+        discover after the run.
+      </p>
+
+      <h2>Sizing on a small label</h2>
+      <p>
+        Packaging is scanned close, roughly 15 to 25 cm, which puts the minimum at
+        about <strong>2 cm</strong> by the 10:1 rule. Go below 1.5 cm and
+        reliability falls off sharply regardless of settings.
+      </p>
+      <p>Two things buy you room when the label is genuinely tight:</p>
+      <ul>
+        <li>
+          <strong>A shorter URL.</strong> Fewer characters means fewer modules
+          means larger squares. This is the biggest lever available and it is free.
+        </li>
+        <li>
+          <strong>Error correction level M, not H.</strong> Higher levels add
+          modules, and at 2 cm that makes each one smaller and harder to resolve.
+          Level H on a small dense code can scan <em>worse</em> than M.
+        </li>
+      </ul>
+      <p>
+        <a href="qr-code-size-for-printing.html">Sizing for print</a> covers the
+        interaction properly.
+      </p>
+
+      <h2>Surfaces that fight back</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Surface</th>
+            <th>Problem</th>
+            <th>What to do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Glossy carton, foil</td>
+            <td>Glare into the camera</td>
+            <td>Matte varnish over the code area</td>
+          </tr>
+          <tr>
+            <td>Kraft, uncoated board</td>
+            <td>Ink spreads, modules merge</td>
+            <td>Print 20–30% larger than calculated</td>
+          </tr>
+          <tr>
+            <td>Bottles, tubes, jars</td>
+            <td>Curve distorts the pattern</td>
+            <td>Keep the code narrow relative to the curve</td>
+          </tr>
+          <tr>
+            <td>Flexible pouches</td>
+            <td>Creases break up the pattern</td>
+            <td>Place on a panel that stays flat; use level Q</td>
+          </tr>
+          <tr>
+            <td>Shrink sleeves</td>
+            <td>Distorts unpredictably during shrink</td>
+            <td>Proof on a shrunk sample, never flat artwork</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        On curved packaging, keep the code well inside the flattest section. A
+        code wrapping past roughly a third of the circumference will not scan from
+        any single angle.
+      </p>
+
+      <h2>Proof on the real thing</h2>
+      <p>
+        Artwork proofs on flat paper prove nothing about packaging. Before the run:
+      </p>
+      <ol>
+        <li>Get a press proof or sample on the <strong>actual substrate</strong></li>
+        <li>If it curves or shrinks, proof it in that state</li>
+        <li>Scan under retail lighting, which is brighter and harsher than an office</li>
+        <li>Try several phones, including an old one</li>
+        <li>Confirm the destination works on a phone and still resolves</li>
+      </ol>
+      <p>
+        Then scan a unit from the first production run before it ships. Presses
+        drift, and a code that proofed cleanly can come out heavier in production.
+      </p>
+
+      <div class="callout">
+        <p>
+          Keep the CSV that generated the batch, in version control or alongside
+          the artwork files. When a SKU is added next year you regenerate one code
+          with identical settings instead of reconstructing what you did.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>Paste a List of URLs to Make QR Codes in Bulk</title>
+    <meta
+      name="description"
+      content="How to generate QR codes by pasting a list of URLs, including pasting two spreadsheet columns straight across, and the comma rule that catches people out."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/paste-list-of-urls-for-qr-codes.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to paste a list of URLs and get QR codes back</h1>
+      <p class="page-meta">Last updated: July 2026 · About 5 minutes</p>
+
+      <p>
+        Exporting a CSV is overkill when you already have the URLs sitting in a
+        chat message, a text file, or two columns of a spreadsheet. The
+        <strong>Paste a list</strong> tab takes them directly. No file, no column
+        mapping, no export step.
+      </p>
+
+      <h2>The basic version</h2>
+      <p>
+        Open the generator, choose <strong>Paste a list</strong>, and put one URL
+        on each line:
+      </p>
+      <pre><code>https://example.com/welcome
+https://example.com/menu
+https://example.com/contact</code></pre>
+      <p>
+        A counter under the box tells you how many URLs it has recognised as you
+        type. If that number does not match what you pasted, something on one of
+        the lines is wrong — usually a stray blank line, which is ignored, or a
+        line that is not a URL at all.
+      </p>
+      <p>
+        Set your format, size and error correction, then generate. You get back a
+        ZIP called <code>qr_codes.zip</code> containing
+        <code>qr_code_1.png</code>, <code>qr_code_2.png</code> and so on, numbered
+        in the order you pasted them.
+      </p>
+
+      <h2>Adding filenames</h2>
+      <p>
+        Numbered files are fine for three codes and useless for forty. To name
+        them, add a filename after a comma or a tab:
+      </p>
+      <pre><code>https://example.com/welcome, welcome-packet
+https://example.com/menu, dinner-menu
+https://example.com/contact, contact-card</code></pre>
+      <p>
+        That produces <code>welcome_packet.png</code>,
+        <code>dinner_menu.png</code> and <code>contact_card.png</code>. The
+        same sanitising applies as everywhere else in the tool: anything that is
+        not a letter or number becomes an underscore, runs of underscores
+        collapse, and duplicates get a numeric suffix so nothing is silently
+        overwritten. The
+        <a href="name-qr-files-from-spreadsheet-column.html">file naming
+        guide</a> goes into that in more detail.
+      </p>
+      <p>You can mix lines with and without filenames. Unnamed ones fall back to numbering.</p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>The useful part: paste two columns straight from a spreadsheet</h2>
+      <p>
+        Tabs work as separators as well as commas, and this matters more than it
+        sounds. When you select two columns in Excel, Google Sheets or Numbers and
+        copy them, they land on the clipboard <em>tab-separated</em>. So you can
+        select a URL column and a name column, copy, and paste the pair directly
+        into the box:
+      </p>
+      <pre><code>https://example.com/a	Room 101
+https://example.com/b	Room 102
+https://example.com/c	Room 103</code></pre>
+      <p>
+        That is the whole workflow. No CSV export, no column mapping, no file
+        anywhere. For a one-off run of a few dozen codes it is considerably faster
+        than the <a href="bulk-qr-codes-from-csv.html">CSV route</a>, which earns
+        its keep on recurring jobs and larger batches.
+      </p>
+      <p>
+        Column order matters: <strong>URL first, name second</strong>. If your
+        sheet has them the other way round, reorder the columns before copying.
+      </p>
+
+      <h2>The comma rule that catches people out</h2>
+      <p>
+        Each line is split at the <strong>first</strong> comma or tab it contains.
+        Everything before is the URL; everything after is the filename. That is
+        simple and predictable, and it breaks in one specific case: a URL that
+        itself contains a comma.
+      </p>
+      <pre><code>https://maps.example.com/?q=51.5074,-0.1278, london-office</code></pre>
+      <p>
+        That splits at the comma inside the coordinates, so the URL is truncated
+        to <code>https://maps.example.com/?q=51.5074</code> and the filename
+        becomes the rest. The code generates without complaint and points
+        somewhere wrong.
+      </p>
+      <p>Two ways out:</p>
+      <ul>
+        <li>
+          <strong>Use a tab instead.</strong> URLs essentially never contain tabs,
+          so tab separation is immune. This is another reason pasting from a
+          spreadsheet is the safer route.
+        </li>
+        <li>
+          <strong>Percent-encode the comma</strong> as <code>%2C</code>. It is
+          equivalent in a URL and removes the ambiguity.
+        </li>
+      </ul>
+      <p>
+        If a URL contains a comma and you do not want a filename at all, encode it
+        anyway — otherwise the line still splits at the comma.
+      </p>
+
+      <h2>Which input mode to use</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mode</th>
+            <th>Best for</th>
+            <th>Gives you</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Paste a list</strong></td>
+            <td>A handful up to a few hundred, already in text form</td>
+            <td>URL and filename</td>
+          </tr>
+          <tr>
+            <td><strong>Upload CSV</strong></td>
+            <td>Recurring jobs, large batches, data with many columns</td>
+            <td>URL, filename, column choice, filename prefix</td>
+          </tr>
+          <tr>
+            <td><strong>Enter manually</strong></td>
+            <td>A few codes, or when you need multiple copies of one</td>
+            <td>URL, filename, and a copies count</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The one thing paste mode does not offer is the <strong>copies</strong>
+        field. If you need forty identical codes for a sheet, use manual entry —
+        see <a href="print-sheet-of-identical-qr-codes.html">printing a sheet of
+        identical codes</a>.
+      </p>
+
+      <h2>Pasting things that are not URLs</h2>
+      <p>
+        Nothing here requires a URL. Whatever is on the line gets encoded as-is,
+        so the paste box handles any text a QR code can carry. A few that are
+        genuinely useful in bulk:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>What you want</th>
+            <th>What to paste</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dial a number</td>
+            <td><code>tel:+441234567890</code></td>
+          </tr>
+          <tr>
+            <td>Start an email</td>
+            <td><code>mailto:hello@example.com</code></td>
+          </tr>
+          <tr>
+            <td>Send a prefilled SMS</td>
+            <td><code>sms:+441234567890?body=BOOK</code></td>
+          </tr>
+          <tr>
+            <td>Open a map location</td>
+            <td><code>geo:51.5074,-0.1278</code></td>
+          </tr>
+          <tr>
+            <td>Plain reference text</td>
+            <td><code>ASSET-004821</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        That last one matters for
+        <a href="qr-codes-for-asset-inventory-labels.html">asset tags</a>. If your
+        stock system scans a bare ID rather than a URL, encode the ID directly —
+        there is no need to invent a web page for it.
+      </p>
+      <p>
+        Two cautions. Anything containing a comma — the <code>geo:</code> example
+        above, or a WiFi string — hits the splitting rule described earlier, so
+        use a tab separator or percent-encode it. And plain text without a
+        protocol will not be offered as a link by most scanners, which is correct
+        for an asset ID and wrong if you meant a web address.
+      </p>
+
+      <h2>Before you paste a long list</h2>
+      <ul>
+        <li>
+          <strong>Every URL needs its protocol.</strong>
+          <code>example.com/page</code> encodes as plain text and many scanners
+          will not open it. Include <code>https://</code>.
+        </li>
+        <li>
+          <strong>Watch for smart quotes and trailing punctuation</strong> if the
+          list came from a document or an email. A full stop at the end of a line
+          becomes part of the URL.
+        </li>
+        <li>
+          <strong>Check the count</strong> under the box before generating. It is
+          the cheapest error check available.
+        </li>
+      </ul>
+
+      <div class="callout">
+        <p>
+          Everything runs in your browser. Pasted URLs are never uploaded
+          anywhere, which matters when the list contains customer links or
+          anything else you would rather not hand to a server.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

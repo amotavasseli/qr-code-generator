@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>Static vs Dynamic QR Codes: Which Do You Actually Need?</title>
+    <meta
+      name="description"
+      content="What separates static and dynamic QR codes, why dynamic ones require a subscription, and how a redirect on your own domain gives you editable destinations without one."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/static-vs-dynamic-qr-codes.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>Static vs dynamic QR codes</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        Every QR code generator eventually asks you to upgrade for "dynamic"
+        codes, usually with a warning that static ones can never be changed. The
+        distinction is real, but it is narrower than the pricing pages suggest,
+        and the useful half of it is available without a subscription.
+      </p>
+
+      <h2>What the two actually are</h2>
+      <p>
+        <strong>A static code contains the destination.</strong> The URL is
+        encoded directly in the pattern. Scanning it goes straight there — no
+        intermediary, nothing to expire, nothing that can be switched off. Change
+        the destination and you must reprint.
+      </p>
+      <p>
+        <strong>A dynamic code contains a redirect.</strong> The pattern encodes a
+        short URL on the provider's domain, something like
+        <code>qr.provider.com/a4f2b</code>. Scanning it hits their server, which
+        forwards you on. Because the forwarding rule lives in their database, the
+        destination can be edited after printing.
+      </p>
+      <p>
+        The scan-time behaviour is otherwise identical. A phone cannot tell the
+        difference, and neither can a person.
+      </p>
+
+      <h2>What you actually pay for</h2>
+      <p>Dynamic codes are sold on three benefits. They are worth separating:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Benefit</th>
+            <th>Real?</th>
+            <th>Needs a subscription?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Change the destination after printing</td>
+            <td>Yes</td>
+            <td>No — see below</td>
+          </tr>
+          <tr>
+            <td>Scan counts and analytics</td>
+            <td>Yes</td>
+            <td>No, if you run the redirect</td>
+          </tr>
+          <tr>
+            <td>Smaller, denser-free pattern</td>
+            <td>Yes</td>
+            <td>No — any short URL does this</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        All three come from the same thing: the code points at a short URL you
+        can control. Nothing about that requires it to be <em>their</em> short
+        URL.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>The version without a subscription</h2>
+      <p>
+        Point your codes at a path on a domain you own, and redirect from there.
+        <code>https://ex.co/m1</code> encoded in the print run; where
+        <code>/m1</code> sends people is a line of configuration you can change
+        whenever you like.
+      </p>
+      <p>You get the editable destination, and you also get:</p>
+      <ul>
+        <li>
+          <strong>Your own domain in the code.</strong> Scanners increasingly
+          preview the URL before opening it, and people are more willing to tap a
+          name they recognise than an unfamiliar shortener.
+        </li>
+        <li>
+          <strong>No third-party dependency.</strong> Provider shuts down, changes
+          pricing, or lets a domain lapse and every printed code you own becomes
+          dead. This is not hypothetical; QR shorteners have disappeared before,
+          taking client campaigns with them.
+        </li>
+        <li>
+          <strong>Your own analytics.</strong> Server logs already record the
+          hits. That is the same data, without a dashboard subscription.
+        </li>
+        <li>
+          <strong>No scan limits.</strong> Free tiers cap scans per month and stop
+          resolving when you exceed them — the worst possible failure, because it
+          arrives exactly when a campaign is working.
+        </li>
+      </ul>
+      <p>
+        The cost is that you need somewhere to host the redirect. If you already
+        have a domain and any hosting, it is minutes of work.
+      </p>
+
+      <h2>Why short URLs help regardless</h2>
+      <p>
+        A shorter URL needs fewer modules, and fewer modules at a fixed physical
+        size means larger, more readable squares. This is the single biggest
+        lever on whether a small printed code scans reliably — bigger than error
+        correction, bigger than most sizing decisions. See
+        <a href="qr-code-size-for-printing.html">sizing for print</a>.
+      </p>
+      <p>
+        So the redirect approach improves scannability as a side effect, which is
+        why long tracking URLs encoded directly into a small label are worth
+        avoiding.
+      </p>
+
+      <h2>Scan tracking, and what it costs you</h2>
+      <p>
+        Analytics is the other half of the dynamic pitch, and it deserves more
+        scrutiny than it usually gets. When a code routes through a provider,
+        every scan is a request to <em>their</em> server, carrying the scanner's
+        IP address, approximate location, device type and timestamp. You see a
+        dashboard; they see the raw data across every client they serve.
+      </p>
+      <p>
+        If your codes are on anything sensitive — patient-facing material,
+        internal asset tags, anything in a workplace — that is a data-sharing
+        decision, and under GDPR or similar regimes it is one you have to be able
+        to account for. A processor agreement with a QR shortener is rarely on
+        anyone's list until an audit asks for it.
+      </p>
+      <p>
+        Running the redirect yourself avoids the question entirely. Your server
+        logs contain the same information, on infrastructure you already have a
+        legal basis for, and you can aggregate or discard as your own policy
+        requires. If you genuinely do not need per-scan analytics — and for asset
+        tags and menus you usually do not — you can log nothing at all.
+      </p>
+      <p>
+        Worth checking before you commit to any paid plan: what happens to
+        existing codes if you stop paying, whether there is a scan cap and what
+        happens when you exceed it, and whether you can export your redirect map
+        to move elsewhere. Providers vary, and the answers are rarely on the
+        pricing page.
+      </p>
+
+      <h2>When a static code is simply correct</h2>
+      <p>Plenty of jobs never need an editable destination:</p>
+      <ul>
+        <li>
+          <strong>Asset and inventory tags</strong> where the code encodes a fixed
+          ID rather than a web address. There is nothing to change. See
+          <a href="qr-codes-for-asset-inventory-labels.html">asset labels</a>.
+        </li>
+        <li>
+          <strong>Event badges</strong> tied to a single attendee for a single
+          day. See
+          <a href="qr-codes-for-event-badges-name-tags.html">event badges</a>.
+        </li>
+        <li>
+          <strong>WiFi credentials, phone numbers, contact details</strong> —
+          fixed data with no server in the picture.
+        </li>
+        <li>
+          <strong>Anything permanent</strong>: a plaque, a museum label, a
+          building sign pointing at a stable page.
+        </li>
+      </ul>
+      <p>
+        For these, a static code is more robust, not less. It has no dependency
+        that can lapse.
+      </p>
+
+      <h2>What this tool makes</h2>
+      <p>
+        The <a href="../index.html">generator</a> produces static codes. Whatever
+        you supply is encoded directly, with no intermediary and no account.
+      </p>
+      <p>
+        Which means the two approaches combine cleanly: put your short redirect
+        URLs in the spreadsheet column, and generate static codes pointing at
+        them. You get editable destinations and full control, with nothing to
+        subscribe to. The
+        <a href="bulk-qr-codes-from-csv.html">CSV walkthrough</a> covers the bulk
+        version of that.
+      </p>
+
+      <div class="callout">
+        <p>
+          Before committing a code to something expensive or permanent, ask what
+          happens if the destination has to move in two years. If the answer is
+          "reprint everything", route it through a path you control now.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

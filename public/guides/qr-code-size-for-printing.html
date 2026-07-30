@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>What Size Should a QR Code Be for Printing?</title>
+    <meta
+      name="description"
+      content="How to get from scanning distance to physical size to pixel dimensions, what 300, 600 and 1000 px actually measure when printed, and when to use SVG instead."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/qr-code-size-for-printing.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>What size should a QR code be for printing?</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        There are two different questions hiding here, and mixing them up is why
+        printed codes come out unscannable. One is
+        <em>how big should the code be on the paper</em>, measured in
+        centimetres. The other is
+        <em>how many pixels should the file contain</em>, which only determines
+        whether that physical size prints sharply. This guide answers both, in
+        that order, because the physical size has to be decided first.
+      </p>
+
+      <h2>Step 1: start from the scanning distance</h2>
+      <p>
+        The rule that governs everything is <strong>10:1</strong>. A code scans
+        reliably from roughly ten times its own width. Reverse it and you have
+        your minimum size: divide the distance people will actually stand by ten.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Where it lives</th>
+            <th>Read from</th>
+            <th>Minimum width</th>
+            <th>Comfortable width</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Business card, badge</td><td>15–20 cm</td><td>1.5 cm</td><td>2 cm</td></tr>
+          <tr><td>Product label, asset tag</td><td>20–30 cm</td><td>2 cm</td><td>2.5 cm</td></tr>
+          <tr><td>Menu, flyer, table tent</td><td>30–50 cm</td><td>3 cm</td><td>4 cm</td></tr>
+          <tr><td>Wall poster</td><td>1.5–2 m</td><td>15 cm</td><td>20 cm</td></tr>
+          <tr><td>Shop window</td><td>3 m</td><td>30 cm</td><td>40 cm</td></tr>
+          <tr><td>Vehicle livery, banner</td><td>5 m+</td><td>50 cm</td><td>60 cm+</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Prefer the comfortable column. The minimum assumes a good phone, steady
+        hands and decent light, and you will not get all three.
+      </p>
+      <p>
+        <strong>Below about 1.5 cm, stop.</strong> Codes smaller than that are
+        unreliable regardless of settings — ink spread and camera resolution both
+        work against you. If the layout genuinely cannot fit 1.5 cm, shorten the
+        URL to reduce the module count, which is the only lever that meaningfully
+        helps at that scale.
+      </p>
+
+      <h2>Step 2: convert to pixels</h2>
+      <p>
+        Print resolution is measured in DPI — dots per inch. Commercial printing
+        assumes 300 DPI. The arithmetic is just:
+      </p>
+      <p><code>pixels = inches × 300</code>, or <code>pixels = (cm ÷ 2.54) × 300</code></p>
+      <p>Which makes the three sizes in this tool concrete:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>At 300 DPI</th>
+            <th>Good for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>300 × 300 px</td>
+            <td>2.5 cm (1 inch)</td>
+            <td>Badges, labels, business cards, asset tags</td>
+          </tr>
+          <tr>
+            <td>600 × 600 px</td>
+            <td>5 cm (2 inches)</td>
+            <td>Menus, flyers, table tents, packaging</td>
+          </tr>
+          <tr>
+            <td>1000 × 1000 px</td>
+            <td>8.5 cm (3.3 inches)</td>
+            <td>Posters, signage, anything read from a distance</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Those are the sizes at which each file prints <em>sharply</em>. You can
+        place a 300 px code at 5 cm and it will still scan — QR codes are
+        forgiving of mild softness because the modules are large relative to the
+        blur. But you are printing at 150 DPI and it will look it next to crisp
+        text.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Step 3: past 8 cm, switch to SVG</h2>
+      <p>
+        Beyond roughly 8 cm, pixel dimensions stop being the right tool.
+        <a href="bulk-qr-codes-as-svg.html">SVG output</a> stores the pattern as
+        vector shapes, so it prints identically at 2 cm or 2 metres with no file
+        size penalty and no resampling.
+      </p>
+      <p>
+        For posters, banners, window graphics and vehicle livery, generate SVG and
+        set the physical size in your layout software. It removes DPI from the
+        conversation entirely.
+      </p>
+      <p>
+        One constraint to know: SVG is only available at
+        <strong>1 QR code per image</strong>. Combined sheets are composed on a
+        canvas, which is inherently raster — see
+        <a href="combine-multiple-qr-codes-on-one-sheet.html">combining codes on
+        one sheet</a>.
+      </p>
+
+      <h2>Size and error correction interact</h2>
+      <p>
+        Raising the error correction level adds modules. At a fixed physical size,
+        more modules means each one is <em>smaller</em> — so a higher level can
+        make a small code harder to scan even though it tolerates more damage in
+        principle.
+      </p>
+      <p>
+        Practically: at 2 cm and below, stay at level M unless the code will be
+        physically abused. Reserve level H for codes with a logo over the centre
+        or codes large enough that the extra density costs nothing. The
+        <a href="qr-code-error-correction-levels.html">error correction guide</a>
+        covers the tradeoff properly.
+      </p>
+
+      <h2>Why two codes the same size can behave differently</h2>
+      <p>
+        Physical size is only half the story. What a camera actually has to
+        resolve is a single module — one little square — and how many of those are
+        packed into the code depends on how much data it carries.
+      </p>
+      <p>
+        A short URL might produce a grid of 25 modules across. A long one with
+        campaign parameters can easily need 45 or more. Print both at 2.5 cm and
+        the modules in the second are barely half the width of the first, so it
+        needs better light, a steadier hand and a closer phone — despite being
+        exactly the same size on the page.
+      </p>
+      <p>
+        This is why "make it bigger" and "shorten the URL" are the two fixes that
+        actually work, and why they are interchangeable: both increase the
+        physical width of each module, which is the only thing the camera cares
+        about. When the layout will not give you more space, the URL is your
+        remaining lever.
+      </p>
+      <p>
+        A practical check: generate the code, open the PNG, and zoom until you can
+        see individual squares. If the grid looks dense and fine-grained rather
+        than chunky, it will not survive being printed small.
+      </p>
+
+      <h2>Do not forget the margin</h2>
+      <p>
+        Whatever size you choose, the code needs blank space around it. The files
+        this tool produces include a two-module quiet zone, which is fine on plain
+        white paper. On a coloured or busy background, add more white space in
+        your layout — a clear border roughly four modules wide. Cropping tight to
+        the pattern is a reliable way to break an otherwise perfect code.
+      </p>
+
+      <h2>A worked example</h2>
+      <p>
+        Say you are printing table tents for a restaurant. Diners scan from a
+        seated position, roughly 40 cm away.
+      </p>
+      <ul>
+        <li>40 cm ÷ 10 = <strong>4 cm minimum</strong>; round up to 4.5 cm for comfort</li>
+        <li>4.5 cm ÷ 2.54 × 300 = <strong>531 px</strong>, so choose 600 px</li>
+        <li>Laminated card gets handled and wiped, so use <strong>level Q</strong></li>
+        <li>Specify matte lamination — gloss throws glare under overhead lights</li>
+      </ul>
+      <p>
+        Then print one, put it on a real table, and scan it sitting down. See
+        <a href="qr-codes-for-restaurant-menus.html">QR codes for restaurant
+        menus</a> for the rest of that job.
+      </p>
+
+      <div class="callout">
+        <p>
+          When you are unsure, go bigger. An oversized QR code is mildly
+          unattractive; an undersized one is worthless, and you find out after the
+          print run.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

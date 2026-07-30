@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>Why Your QR Code Will Not Scan, and How to Fix It</title>
+    <meta
+      name="description"
+      content="The reasons printed QR codes fail to scan, in the order they actually happen: size against distance, missing quiet zone, contrast, surface, and URL length. With the fix for each."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/why-qr-code-not-scanning.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>Why your QR code will not scan</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        A QR code that works perfectly on your monitor and fails on the printed
+        page is the most common problem in this whole business. The code is
+        almost never the issue — the encoding either worked or it did not, and if
+        it scans once it will scan forever. What changes is everything around it:
+        how big it ended up, what it was printed on, and how far away the phone
+        is.
+      </p>
+      <p>
+        Here are the causes in roughly the order they actually occur, with the
+        fix for each.
+      </p>
+
+      <h2>1. It is too small for the distance</h2>
+      <p>
+        This causes more failures than everything else combined. The working rule
+        is <strong>10:1</strong>: a code scans reliably from about ten times its
+        own width. A code 2 cm across wants the phone within about 20 cm. Put
+        that same code on a wall poster people read from two metres away and it
+        will never scan, no matter how many times you regenerate it.
+      </p>
+      <p>
+        Work backwards from the real reading distance rather than forwards from
+        what fits the layout:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Scanned from</th>
+            <th>Minimum code width</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Held in the hand (20 cm)</td><td>2 cm</td></tr>
+          <tr><td>Across a table (50 cm)</td><td>5 cm</td></tr>
+          <tr><td>Standing at a sign (1.5 m)</td><td>15 cm</td></tr>
+          <tr><td>Shop window (3 m)</td><td>30 cm</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <a href="qr-code-size-for-printing.html">Sizing for print</a> covers how
+        to get from these numbers to the right pixel dimensions.
+      </p>
+
+      <h2>2. The quiet zone got cropped</h2>
+      <p>
+        A QR code needs blank margin around it so the scanner can find its edges.
+        Crop tight to the pattern and recognition falls apart, which is why codes
+        often stop working after someone drops them into a design and trims the
+        whitespace.
+      </p>
+      <p>
+        Worth knowing precisely:
+        <strong>the codes this tool produces carry a two-module quiet zone.</strong>
+        The QR specification recommends four. Two is enough on plain white paper
+        and keeps the image compact, but if you are placing a code on a coloured
+        background, a photograph, or anything busy, <em>add white space
+        yourself</em> in your layout rather than relying on what is baked into the
+        file. A white box around the code with margin equal to roughly four of
+        its little squares is the safe version.
+      </p>
+      <p>Never let anything overlap the code — not a border, not a caption, not a page edge.</p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>3. Contrast is wrong, or inverted</h2>
+      <p>
+        Codes generated here are pure black on pure white, which is the maximum
+        contrast available and never the problem at the point of generation. It
+        becomes a problem afterwards, in two ways.
+      </p>
+      <p>
+        <strong>Recolouring.</strong> Designers lighten the dark modules to match
+        a brand palette. Mid-greys on white read as ambiguous to a camera in poor
+        light. If you must recolour, keep the dark modules genuinely dark.
+      </p>
+      <p>
+        <strong>Inverting.</strong> Light code on a dark background looks smart
+        and breaks a significant share of scanners. Some handle inversion, many
+        do not. There is no upside worth that.
+      </p>
+
+      <h2>4. The surface is fighting you</h2>
+      <p>Print introduces failures that never appear on screen:</p>
+      <ul>
+        <li>
+          <strong>Glossy stock and lamination</strong> throw glare straight back
+          at the camera. Matte finishes scan far more reliably, especially under
+          overhead lighting.
+        </li>
+        <li>
+          <strong>Ink bleed on absorbent material</strong> — uncoated stock,
+          fabric, cardboard — thickens the dark modules until they merge. Print
+          larger than you think you need on anything absorbent.
+        </li>
+        <li>
+          <strong>Curved surfaces</strong> distort the pattern. On bottles and
+          tubes, keep the code narrow relative to the curve so it stays close to
+          flat.
+        </li>
+        <li>
+          <strong>Low-resolution printing.</strong> A 300 px image stretched
+          across a poster is a blurry code. Use
+          <a href="bulk-qr-codes-as-svg.html">SVG output</a> for anything large.
+        </li>
+      </ul>
+
+      <h2>5. The URL is too long</h2>
+      <p>
+        Every extra character adds modules, and more modules at a fixed physical
+        size means smaller squares for the camera to resolve. A long tracking URL
+        with campaign parameters can easily double the module count against a
+        short one.
+      </p>
+      <p>
+        This is the highest-leverage fix available and the one people reach for
+        last. Shortening the destination does more for scannability than any
+        setting in any generator. Redirecting through a short path on a domain
+        you control has a second benefit: you can change where it points later,
+        which a printed code otherwise cannot do — see
+        <a href="static-vs-dynamic-qr-codes.html">static versus dynamic codes</a>.
+      </p>
+
+      <h2>6. It is damaged, covered, or worn</h2>
+      <p>
+        Codes in the physical world get scuffed, folded and rained on. That is
+        what error correction is for, and if codes are failing after weeks in
+        service rather than on day one, the level was set too low.
+      </p>
+      <p>
+        Level Q tolerates about 25% damage and is the right default for anything
+        handled. Level H tolerates about 30% and is what you need if a logo
+        covers the centre. The
+        <a href="qr-code-error-correction-levels.html">error correction guide</a>
+        explains why H is not simply "better" — at a fixed size the denser
+        pattern can scan worse.
+      </p>
+
+      <h2>7. Nothing is wrong with the code</h2>
+      <p>Before regenerating anything, rule these out:</p>
+      <ul>
+        <li>
+          <strong>The URL is broken.</strong> The code scans fine and the page
+          404s. Open the link in a browser first — a QR code cannot fix a typo in
+          a spreadsheet.
+        </li>
+        <li>
+          <strong>Missing protocol.</strong> A value of
+          <code>example.com/page</code> encodes as plain text, and many scanners
+          will not offer to open it. Always include <code>https://</code>. The
+          <a href="csv-format-for-bulk-qr-codes.html">CSV formatting guide</a>
+          covers this.
+        </li>
+        <li>
+          <strong>The wrong column got encoded.</strong> If every code in a batch
+          resolves to something odd, check which column was selected.
+        </li>
+        <li><strong>A dirty camera lens.</strong> It happens more than you would think.</li>
+      </ul>
+
+      <h2>How to test properly</h2>
+      <p>
+        Screen testing proves the encoding is valid and nothing else. The only
+        test that means anything is the real one:
+      </p>
+      <ul>
+        <li>Print <strong>one</strong> code at final size on the final material</li>
+        <li>Scan it at the real distance, under the real lighting</li>
+        <li>Try an old phone, not just your own</li>
+        <li>If it will live outdoors, check it in daylight and at dusk</li>
+      </ul>
+      <p>
+        Do this before the print run, not after. It is the difference between
+        reprinting one sheet and reprinting four hundred labels.
+      </p>
+
+      <div class="callout">
+        <p>
+          If a code fails, change one thing at a time and rescan. Make it bigger
+          first — size fixes more failures than every other adjustment put
+          together.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
