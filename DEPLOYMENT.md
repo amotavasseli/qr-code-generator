@@ -1,21 +1,36 @@
 # Deployment Guide
 
 This guide explains how to deploy the QR Code Generator to GitHub Pages at
-**batchqrcodes.com**.
+**www.batchqrcodes.com**.
 
-## Custom domain setup (batchqrcodes.com)
+## Custom domain setup (www.batchqrcodes.com)
 
-The repo is already configured for the custom domain:
+`www` is the canonical domain — every absolute URL in the site (canonical
+tags, `sitemap.xml`, `robots.txt`, Open Graph tags, JSON-LD) points there, and
+`public/CNAME` contains `www.batchqrcodes.com`, which is what tells GitHub
+Pages which domain to serve.
 
-- `public/CNAME` contains `batchqrcodes.com` and is copied into `build/` by the
-  build, which is what tells GitHub Pages to serve the domain.
-- `homepage` in `package.json` is `"."`, so CRA emits relative asset paths.
-  Combined with relative internal links, that makes every page work at the
-  domain root, under the dev server, and when opened directly off disk.
+**Do not change `public/CNAME` to the apex (`batchqrcodes.com`) without also
+changing every one of those other files.** GitHub Pages reads the custom
+domain from whichever `CNAME` file is in the artifact on each deploy, so a
+mismatch between that file and what's registered in **Settings → Pages**
+causes GitHub to silently re-issue the domain setting on every push — which
+can interrupt certificate provisioning and leave HTTPS half-configured. That
+is exactly what happened before this domain got standardized on `www`: the
+apex briefly 301-redirected to `www` while the HTTPS certificate only covered
+`*.github.io`, so anything fetching over HTTPS (including Google's AdSense and
+Search Console crawlers) got a certificate mismatch instead of a page.
 
 ### DNS records to add at your registrar
 
-For the apex domain, four A records (apex domains cannot use CNAME):
+One CNAME record for `www`, which is what actually serves the site:
+
+```
+CNAME    www    amotavasseli.github.io
+```
+
+Plus four A records for the apex, so `batchqrcodes.com` (no `www`) at least
+resolves instead of erroring outright — GitHub will redirect it to `www`:
 
 ```
 A    @    185.199.108.153
@@ -24,15 +39,10 @@ A    @    185.199.110.153
 A    @    185.199.111.153
 ```
 
-Plus one record for the `www` subdomain:
-
-```
-CNAME    www    amotavasseli.github.io
-```
-
 Then in the repository's **Settings → Pages**, set the custom domain to
-`batchqrcodes.com` and tick **Enforce HTTPS** once the certificate is issued
-(this can take up to 24 hours after DNS propagates).
+`www.batchqrcodes.com` and tick **Enforce HTTPS** once the certificate is
+issued (this can take up to 24 hours after DNS propagates — check back rather
+than re-saving the field repeatedly, since each save restarts provisioning).
 
 ### Email forwarding
 
@@ -49,7 +59,7 @@ The repo contains the scaffolding; these steps happen outside it.
    `/contact.html` all load.
 2. **`public/ads.txt`** currently holds a placeholder publisher ID
    (`pub-0000000000000000`). Replace it with your real ID after approval and
-   redeploy. It must remain at the domain root — `https://batchqrcodes.com/ads.txt`.
+   redeploy. It must remain at the domain root — `https://www.batchqrcodes.com/ads.txt`.
 3. **Ad units** — the HTML files contain `<!-- AD SLOT: ... -->` comments marking
    the intended positions (below the tool, mid-guide, end-of-guide). Add the
    AdSense script and unit code at those points only after approval.
@@ -59,7 +69,7 @@ The repo contains the scaffolding; these steps happen outside it.
    Enable Google's own **Privacy & messaging** (Funding Choices) in the AdSense
    console; it is free and certified. No repo change required.
 5. **Search Console** — verify the domain and submit
-   `https://batchqrcodes.com/sitemap.xml`.
+   `https://www.batchqrcodes.com/sitemap.xml`.
 
 If the application is rejected for "low value content", the fix is more written
 content, not more ad code. The `public/guides/` directory is where it goes.
@@ -77,7 +87,7 @@ The repository includes a GitHub Actions workflow that automatically deploys to 
 
 2. **Merge the PR**:
    - Once this PR is merged to `main`, the workflow will automatically run
-   - The site will be deployed to: `https://batchqrcodes.com`
+   - The site will be deployed to: `https://www.batchqrcodes.com`
 
 3. **Check Deployment Status**:
    - Go to the "Actions" tab in your repository

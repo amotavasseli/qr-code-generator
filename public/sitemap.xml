@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://batchqrcodes.com/</loc>
+    <loc>https://www.batchqrcodes.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/</loc>
+    <loc>https://www.batchqrcodes.com/guides/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/bulk-qr-codes-from-csv.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/bulk-qr-codes-from-csv.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/print-sheet-of-identical-qr-codes.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/print-sheet-of-identical-qr-codes.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/name-qr-files-from-spreadsheet-column.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/name-qr-files-from-spreadsheet-column.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/csv-format-for-bulk-qr-codes.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/csv-format-for-bulk-qr-codes.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/bulk-qr-codes-as-svg.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/bulk-qr-codes-as-svg.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/qr-code-error-correction-levels.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/qr-code-error-correction-levels.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/qr-codes-for-asset-inventory-labels.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/qr-codes-for-asset-inventory-labels.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/guides/qr-codes-for-event-badges-name-tags.html</loc>
+    <loc>https://www.batchqrcodes.com/guides/qr-codes-for-event-badges-name-tags.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/about.html</loc>
+    <loc>https://www.batchqrcodes.com/about.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/contact.html</loc>
+    <loc>https://www.batchqrcodes.com/contact.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/privacy.html</loc>
+    <loc>https://www.batchqrcodes.com/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://batchqrcodes.com/terms.html</loc>
+    <loc>https://www.batchqrcodes.com/terms.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
