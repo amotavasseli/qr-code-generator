@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>QR Codes for Event Badges and Name Tags</title>
+    <meta
+      name="description"
+      content="Generate one QR code per attendee from your registration export, named so a badge mail merge finds the right image. Sizing, placement and check-in tips."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/qr-codes-for-event-badges-name-tags.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>QR codes for event badges and name tags</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Badge production has a hard deadline and no room for a second attempt.
+        The QR code part is straightforward — one code per attendee, generated
+        from your registration export — but it has to slot into a mail merge
+        cleanly, and it has to scan on a lanyard in a badly lit foyer. This guide
+        covers both.
+      </p>
+
+      <h2>Decide what each code does</h2>
+
+      <h3>Check-in and lead capture</h3>
+      <p>
+        The most common setup: each code identifies the attendee to your own
+        system.
+      </p>
+      <pre><code>https://event.example.com/checkin/A4471</code></pre>
+      <p>
+        Scanning at the door pulls up the registration; scanning at a sponsor
+        stand captures a lead. Because the identifier is in the URL, whatever
+        scans it needs no special app — a phone camera works.
+      </p>
+
+      <h3>A personal agenda or profile</h3>
+      <p>
+        A link to the attendee's own schedule, session bookings or networking
+        profile. Same shape, different destination.
+      </p>
+
+      <h3>Contact details (vCard)</h3>
+      <p>
+        You will see advice to encode a full vCard so people can scan each
+        other's badges into their phone contacts. It works, but be aware of the
+        trade-off: a vCard is a lot of data, which produces a dense pattern that
+        needs a physically larger code to stay scannable, and the details are
+        frozen at print time. A URL to a profile page is smaller, editable, and
+        can be revoked after the event.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>Think about what the code exposes.</strong> Anyone can
+          photograph a badge across a table. Encode an opaque identifier
+          (<code>A4471</code>) rather than an email address, and let your system
+          decide who is allowed to resolve it. A badge is a public object.
+        </p>
+      </div>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Export the registration list</h2>
+      <p>
+        Eventbrite, Hopin, Cvent, Google Forms and most registration platforms
+        export a CSV. You need two columns: something to build the URL from, and
+        something to name the files with.
+      </p>
+      <pre><code>url,attendee_id,full_name
+https://event.example.com/checkin/A4471,A4471,Ada Lovelace
+https://event.example.com/checkin/A4472,A4472,Alan Turing
+https://event.example.com/checkin/A4473,A4473,Grace Hopper</code></pre>
+      <p>
+        If the export only has IDs, build the URL column with a formula:
+        <code>="https://event.example.com/checkin/"&amp;B2</code>.
+      </p>
+
+      <h2>Name the files to match your badge template</h2>
+      <p>
+        This is the step that makes the difference between a merge that runs
+        itself and an evening of manual image placement.
+      </p>
+      <p>
+        In the <a href="../index.html">generator</a>, choose your URL column, then set the
+        filename column to whatever your badge template will merge on — almost
+        always the attendee ID. Then <strong>clear the prefix field</strong>. You
+        want <code>A4471.png</code>, not <code>qr_A4471.png</code>, because the
+        merge field builds the image path from the ID directly.
+      </p>
+      <p>
+        Keep codes per image at <strong>1</strong>. Badge software places one
+        image per badge; a grid is no use here.
+      </p>
+      <p>
+        The result is a folder of PNGs whose names are exactly the IDs in your
+        badge data file. In Word, that is an <code>INCLUDEPICTURE</code> field
+        pointing at <code>C:\badges\{MERGEFIELD attendee_id}.png</code>. In
+        InDesign, it is a data merge with an image column holding
+        <code>@/badges/A4471.png</code>. Either way, no manual placement.
+      </p>
+
+      <h3>If you must name by person's name</h3>
+      <p>
+        Naming after <code>full_name</code> works, with two caveats. Spaces and
+        punctuation become underscores, so <code>Ada Lovelace</code> arrives as
+        <code>Ada_Lovelace.png</code> — your merge path has to account for that.
+        And names are not unique: two attendees called John Smith produce
+        <code>John_Smith.png</code> and <code>John_Smith_2.png</code>, and
+        nothing tells you which is which. Use the ID.
+      </p>
+
+      <h2>Sizing and placement</h2>
+      <p>
+        A badge QR code should be at least <strong>2.5 cm (1 in)</strong> square.
+        Smaller than that and check-in slows down measurably as people fumble to
+        get the camera to focus at close range — which matters enormously when
+        four hundred people arrive in twenty minutes.
+      </p>
+      <ul>
+        <li>
+          <strong>Put it low on the badge.</strong> Lanyards flip, and the bottom
+          half is what remains visible and flat when a badge curls.
+        </li>
+        <li>
+          <strong>Keep the quiet zone.</strong> Do not butt text or a border up
+          against the pattern; scanners need the white margin, which the
+          generated PNGs already include.
+        </li>
+        <li>
+          <strong>Print the ID as text underneath.</strong> When a code will not
+          scan at the door — a crease, a smudge, a dead phone — a staff member
+          can type the number. This single line of text prevents most check-in
+          queues.
+        </li>
+        <li>
+          <strong>Avoid glossy lamination</strong> in a room with spotlights.
+          Matte stock scans far more reliably under event lighting.
+        </li>
+        <li>
+          <strong>Do not print on coloured card</strong> without testing. QR
+          contrast requirements are real; dark backgrounds in particular defeat
+          scanners.
+        </li>
+      </ul>
+
+      <h2>Test the whole chain before the print run</h2>
+      <p>
+        Print three real badges — the first, the last, and one from the middle of
+        the file — on the actual stock. Then:
+      </p>
+      <ol>
+        <li>
+          Scan each with the device check-in staff will actually use, not just
+          your own phone.
+        </li>
+        <li>
+          Confirm each resolves to the <em>correct</em> attendee. A misaligned
+          merge that shifts images by one row is the nightmare scenario, and it
+          is invisible unless you check names against codes.
+        </li>
+        <li>Test under the venue's lighting if you can get in beforehand.</li>
+      </ol>
+
+      <h2>Walk-ups and reprints</h2>
+      <p>
+        Some proportion of attendees will register on the day or need a
+        replacement badge. Two ways to handle it:
+      </p>
+      <ul>
+        <li>
+          <strong>Pre-generate spares.</strong> Create a block of unassigned IDs
+          in advance, print them as blank badges, and assign them at the desk.
+        </li>
+        <li>
+          <strong>Generate on the spot.</strong> The manual entry tab handles one
+          person in about fifteen seconds, and it works without a network
+          connection once the page is loaded — which is worth knowing, because
+          venue wifi is unreliable at exactly the moment you need it.
+        </li>
+      </ul>
+      <p>
+        Bring the source CSV and the generated ZIP on a laptop at the event.
+        Since the files are named by attendee ID, reprinting one badge means
+        finding one file.
+      </p>
+
+      <h2>Keeping the attendee list private</h2>
+      <p>
+        A registration export is personal data — names, and often emails and
+        employers. Uploading it to an unfamiliar web service is a genuine
+        problem, and depending on where your attendees live, possibly a
+        regulatory one.
+      </p>
+      <p>
+        Generation here happens entirely inside your browser. The CSV is read
+        locally, the codes are drawn locally, and the ZIP is assembled locally —
+        the file never travels anywhere. See the
+        <a href="../privacy.html">Privacy Policy</a> for specifics, and
+        <a href="csv-format-for-bulk-qr-codes.html"
+          >the CSV formatting guide</a
+        >
+        for getting the export itself right.
+      </p>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.ico" />
+    <title>About Batch QR Codes — Who Makes This Tool and Why</title>
+    <meta
+      name="description"
+      content="Batch QR Codes is a free, browser-based bulk QR code generator. Here is who built it, why it works entirely on your device, and how the site is funded."
+    />
+    <link rel="canonical" href="https://batchqrcodes.com/about.html" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="index.html">Batch QR Codes</a>
+        <a href="guides/index.html">Guides</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>About Batch QR Codes</h1>
+      <p class="page-meta">Last updated: July 2026</p>
+
+      <p>
+        Batch QR Codes is a free tool for generating a lot of QR codes at once.
+        It is an independent project — there is no company behind it, no funding
+        round, and no sales team. It is a single-purpose utility that exists
+        because the job it does was annoying to do any other way.
+      </p>
+
+      <h2>Why it was built</h2>
+      <p>
+        The tool started as a script written for a specific problem: a
+        spreadsheet of a few hundred URLs, each of which needed its own QR code,
+        each saved under a filename that identified the row it came from. Doing
+        that by hand in a normal QR generator means several hundred rounds of
+        paste, download, rename. Doing it in most bulk generators means getting
+        back a ZIP full of <code>qr_code_1.png</code> through
+        <code>qr_code_400.png</code> and no way to tell which is which.
+      </p>
+      <p>
+        That last part is the gap this tool was built to close. You choose which
+        column of your spreadsheet names the output files, so the ZIP you get
+        back is immediately usable — no cross-referencing row numbers against
+        file numbers.
+      </p>
+      <p>
+        The rest of the features came from the same place. Printed sheets with
+        labels underneath each code, because an unlabelled grid of QR codes is
+        indistinguishable to the human eye. A copies count, because sometimes you
+        want forty of the same code, not forty different ones.
+      </p>
+
+      <h2>How it works, and why that matters</h2>
+      <p>
+        Everything happens in your browser. When you upload a CSV, the file is
+        read by JavaScript on your own machine; when codes are generated, they
+        are drawn onto a canvas in your own browser; when you download the ZIP,
+        it was assembled locally and handed straight to your downloads folder.
+      </p>
+      <p>
+        No URL you enter is transmitted to this site or anywhere else. This is
+        not a policy promise that could quietly change — it is how the tool is
+        architected. There is no backend server to receive your data, because the
+        site is a set of static files.
+      </p>
+      <p>
+        That design decision is deliberate. Bulk QR code generation tends to
+        involve exactly the kind of data people should not be pasting into a
+        random web form: internal asset URLs, customer record links, unreleased
+        product pages, attendee lists. Keeping the processing local means none of
+        that has to be trusted to anyone.
+      </p>
+
+      <h2>How the site is funded</h2>
+      <p>
+        The tool is free and has no paid tier. The site displays advertising
+        through Google AdSense to cover the cost of the domain and the time spent
+        maintaining it. Ads are kept out of the tool itself — you will not find
+        one wedged between the upload button and the generate button.
+      </p>
+      <p>
+        Advertising does mean third-party cookies are involved, which is covered
+        in detail in the <a href="privacy.html">Privacy Policy</a>. The ad
+        network never receives your CSV contents or the URLs you encode, because
+        those never leave your device in the first place.
+      </p>
+
+      <h2>Feedback</h2>
+      <p>
+        Bug reports and feature requests are welcome — most of what the tool does
+        now came from someone pointing out that it did not do it yet. See the
+        <a href="contact.html">contact page</a>.
+      </p>
+
+      <p><a class="cta" href="index.html">Use the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="guides/index.html">Guides</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

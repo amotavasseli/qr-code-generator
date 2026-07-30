@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>How to Generate QR Codes in Bulk From a CSV File</title>
+    <meta
+      name="description"
+      content="A step-by-step guide to turning a spreadsheet of URLs into hundreds of QR codes: preparing the CSV, choosing the URL and filename columns, and downloading the ZIP."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/bulk-qr-codes-from-csv.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>How to generate QR codes in bulk from a CSV file</h1>
+      <p class="page-meta">Last updated: July 2026 · About 7 minutes</p>
+
+      <p>
+        Generating one QR code is trivial. Generating four hundred, each pointing
+        somewhere different and each needing to end up on a specific label, is a
+        different job — and it is the point at which most QR tools stop being
+        helpful. This guide covers the whole process using the
+        <a href="../index.html">bulk generator on this site</a>, including the parts that
+        usually go wrong.
+      </p>
+
+      <h2>What you need before you start</h2>
+      <p>
+        A CSV file with a header row and a column of URLs. That is genuinely all
+        that is required. If you have a second column that identifies each row —
+        an employee ID, a SKU, a room number, an attendee name — you will get
+        considerably more value out of the process, but it is optional.
+      </p>
+      <p>Something like this is enough:</p>
+      <pre><code>url,employee_id
+https://intranet.example.com/staff/10432,E10432
+https://intranet.example.com/staff/10433,E10433
+https://intranet.example.com/staff/10434,E10434</code></pre>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>Step 1: Export a clean CSV</h2>
+      <p>
+        In Excel or Google Sheets, use <em>File → Download → Comma-separated
+        values</em> or <em>Save As → CSV UTF-8</em>. Two things matter here:
+      </p>
+      <ul>
+        <li>
+          <strong>Keep the header row.</strong> The generator reads your column
+          names and offers them to you as choices. Without a header row, the
+          first URL in your list gets consumed as a column name and you lose a
+          code.
+        </li>
+        <li>
+          <strong>Choose UTF-8 if offered.</strong> If any of your identifiers
+          contain accented characters, non-Latin scripts, or curly quotes,
+          non-UTF-8 exports will turn them into mojibake in the filenames.
+        </li>
+      </ul>
+      <p>
+        There is more detail on export quirks in
+        <a href="csv-format-for-bulk-qr-codes.html"
+          >formatting a CSV for bulk QR generation</a
+        >, including what to do about commas inside URLs.
+      </p>
+
+      <h2>Step 2: Upload it</h2>
+      <p>
+        Open the <a href="../index.html">generator</a>, stay on the "Upload CSV" tab, and
+        choose your file. It is parsed immediately in your browser — nothing is
+        uploaded to a server — and you will see a confirmation of how many rows
+        were found.
+      </p>
+      <p>
+        If the row count is one fewer than you expected, that is the header row
+        being correctly excluded. If it is dramatically lower, your file is
+        probably semicolon-delimited rather than comma-delimited, which is the
+        default CSV export in several European locale settings.
+      </p>
+
+      <h2>Step 3: Tell it which column holds the URLs</h2>
+      <p>
+        Two dropdowns appear once the file is loaded, populated with your actual
+        column names. The first asks which column contains the URLs. If your
+        column is called <code>url</code> or <code>link</code>, it is selected
+        automatically; otherwise pick it from the list.
+      </p>
+      <p>
+        This matters more than it sounds. Many bulk tools assume the first column
+        is the URL, which forces you to reorder your spreadsheet to match the
+        tool. Here the spreadsheet stays as it is and you point the tool at the
+        right column.
+      </p>
+
+      <h2>Step 4: Choose how the files get named</h2>
+      <p>
+        This is the step that decides whether the ZIP you download is usable or
+        merely a pile of images.
+      </p>
+      <p>
+        The second dropdown asks which column should name the output files. Leave
+        it on <strong>Numbered</strong> and you get
+        <code>qr_code_1.png</code> through <code>qr_code_400.png</code> — fine if
+        you are going to use them in row order and never touch them individually.
+        Pick a column, and each file is named from that row's value:
+        <code>E10432.png</code>, <code>E10433.png</code>, and so on.
+      </p>
+      <p>
+        A prefix field appears once you pick a column. It is prepended to every
+        filename, which is useful when the codes will be mixed into a folder with
+        other files — <code>badge_E10432.png</code> sorts and searches better
+        than a bare ID.
+      </p>
+      <p>Two rules apply to the names, and both prevent silent damage:</p>
+      <ul>
+        <li>
+          Anything that is not a letter or a number becomes an underscore. An
+          email address like <code>ada@example.com</code> becomes
+          <code>ada_example_com.png</code>. This is deliberate — slashes, colons
+          and question marks are illegal or dangerous in filenames on at least
+          one major operating system.
+        </li>
+        <li>
+          Duplicate names get a numeric suffix. If three rows share the value
+          <code>warehouse</code>, you get <code>warehouse.png</code>,
+          <code>warehouse_2.png</code> and <code>warehouse_3.png</code>. Without
+          this, the second and third would silently overwrite the first inside
+          the ZIP and you would end up with fewer files than rows — a failure
+          that is easy to miss until the labels are already printed.
+        </li>
+      </ul>
+      <p>
+        The <a href="name-qr-files-from-spreadsheet-column.html"
+          >guide on filename columns</a
+        > goes deeper into choosing a good identifier column.
+      </p>
+
+      <h2>Step 5: Decide on individual files or printed sheets</h2>
+      <p>
+        The "QR codes per image" setting controls the output shape:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>What you get</th>
+            <th>Good for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>One PNG per row, individually named</td>
+            <td>Mail merge, label software, per-item use</td>
+          </tr>
+          <tr>
+            <td>2 or more</td>
+            <td>A grid of codes on one PNG, labelled underneath</td>
+            <td>Printing directly, cutting up by hand</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        If you are feeding the codes into Word, InDesign, Avery templates or
+        label-printing software, you want <strong>1</strong>. Those tools want to
+        place images individually and will find them by filename — which is
+        exactly why step 4 matters.
+      </p>
+      <p>
+        If you are going to print and cut, pick a number that matches your paper.
+        The codes are arranged in a near-square grid, so 12 per image gives you a
+        4 × 3 layout. Each code is labelled underneath with its name, or with its
+        URL if you did not choose a filename column — because an unlabelled sheet
+        of QR codes is impossible to sort out by eye once it is cut up. The label
+        can be switched off with the checkbox if you want bare codes.
+      </p>
+
+      <h2>Step 6: Generate</h2>
+      <p>
+        Click <strong>Generate QR Codes</strong>. Everything happens on your
+        machine: each code is encoded, drawn onto a canvas, and added to a ZIP
+        archive which then downloads automatically as
+        <code>qr_codes.zip</code>.
+      </p>
+      <p>
+        Large batches take a moment — a few thousand codes will keep the browser
+        busy for a minute or so, and the tab may look unresponsive while it
+        works. That is normal. There is no upload step and no queue, so the only
+        limit is your own device.
+      </p>
+
+      <h2>Before you print several hundred of anything</h2>
+      <p>
+        Scan-test at least three codes from the finished batch with an actual
+        phone camera: the first, the last, and one from the middle. This catches
+        the two mistakes that are expensive to discover later — a column
+        misselected so that every code encodes an identifier rather than a URL,
+        and an export where trailing whitespace or a stray quote character ended
+        up inside every URL.
+      </p>
+      <div class="callout">
+        <p>
+          <strong>Static codes cannot be edited.</strong> The destination is
+          encoded directly into the pattern, so there is no redirect to update
+          later. That is what makes them permanent and untrackable — but it also
+          means a wrong URL is a reprint. If you expect destinations to change,
+          encode URLs on a domain you control and handle the redirect at your
+          end.
+        </p>
+      </div>
+
+      <h2>Common problems</h2>
+
+      <h3>The ZIP has fewer files than my CSV had rows</h3>
+      <p>
+        Rows with an empty URL cell are skipped. Check for blank rows at the
+        bottom of the spreadsheet, which Excel exports enthusiastically.
+      </p>
+
+      <h3>Every filename is qr_code_N even though I picked a column</h3>
+      <p>
+        The chosen column is empty for those rows, so the numbered fallback
+        applies. This often happens when the identifier column has a formula that
+        exported as a blank rather than a value.
+      </p>
+
+      <h3>The codes scan to the wrong page</h3>
+      <p>
+        Almost always the URL column contains a relative path
+        (<code>/staff/10432</code>) rather than a full URL. A QR code has no
+        concept of "current site", so the scheme and domain must be present:
+        <code>https://intranet.example.com/staff/10432</code>.
+      </p>
+
+      <h3>My scanner reads the code but nothing opens</h3>
+      <p>
+        Check the scheme. <code>www.example.com</code> without
+        <code>https://</code> is encoded as plain text, and many scanners will
+        display it rather than open it.
+      </p>
+
+      <h2>Next steps</h2>
+      <ul>
+        <li>
+          <a href="print-sheet-of-identical-qr-codes.html"
+            >Printing a sheet of identical codes</a
+          >
+          — when every code is the same rather than different.
+        </li>
+        <li>
+          <a href="qr-codes-for-asset-inventory-labels.html"
+            >QR codes for asset and inventory labels</a
+          >
+          — what to encode on a physical asset tag.
+        </li>
+      </ul>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

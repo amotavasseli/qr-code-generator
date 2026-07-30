@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <title>QR Code Error Correction Levels: L, M, Q and H Explained</title>
+    <meta
+      name="description"
+      content="What QR code error correction levels mean, how much damage each tolerates, what they cost in pattern density, and which level to pick for labels, badges and screens."
+    />
+    <link
+      rel="canonical"
+      href="https://batchqrcodes.com/guides/qr-code-error-correction-levels.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>QR code error correction levels explained</h1>
+      <p class="page-meta">Last updated: July 2026 · About 6 minutes</p>
+
+      <p>
+        Every QR code carries redundant data so it can still be read when part of
+        it is damaged, dirty, or covered. How much redundancy is the error
+        correction level, and you choose it: L, M, Q or H. This guide explains
+        what you are trading away and which level to pick.
+      </p>
+
+      <h2>The four levels</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Name</th>
+            <th>Recoverable damage</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>L</strong></td>
+            <td>Low</td>
+            <td>~7%</td>
+            <td>Smallest, sparsest pattern</td>
+          </tr>
+          <tr>
+            <td><strong>M</strong></td>
+            <td>Medium</td>
+            <td>~15%</td>
+            <td>The common default</td>
+          </tr>
+          <tr>
+            <td><strong>Q</strong></td>
+            <td>Quartile</td>
+            <td>~25%</td>
+            <td>Noticeably denser</td>
+          </tr>
+          <tr>
+            <td><strong>H</strong></td>
+            <td>High</td>
+            <td>~30%</td>
+            <td>Densest pattern</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        "Recoverable damage" means the proportion of the code's data that can be
+        destroyed while the whole message is still reconstructed correctly. At
+        level H, roughly a third of the code can be missing and it still scans.
+      </p>
+
+      <!-- AD SLOT: in-content unit. Add after AdSense approval. -->
+
+      <h2>What you pay for it</h2>
+      <p>
+        Redundancy is stored in the pattern, so a higher level means more modules
+        — more little squares — for the same URL. That has a practical
+        consequence people often miss:
+      </p>
+      <p>
+        <strong
+          >At a fixed physical size, a higher error correction level makes each
+          module smaller.</strong
+        >
+        Smaller modules are harder for a camera to resolve. So level H is not
+        automatically more reliable — pushed onto a code that is already small,
+        the denser pattern can be <em>less</em> readable than level M would have
+        been, even though it tolerates more damage in principle.
+      </p>
+      <p>
+        The two effects work against each other, which is why the right answer
+        depends on the physical situation rather than on "more is better".
+      </p>
+
+      <h2>Which to choose</h2>
+
+      <h3>Level M — the default, and usually right</h3>
+      <p>
+        Use M unless you have a specific reason not to. It handles the ordinary
+        wear of a printed page, a screen, or a laminated card. Every level in this
+        tool defaults here.
+      </p>
+
+      <h3>Level L — screens and clean, controlled contexts</h3>
+      <p>
+        Choose L when the code will be scanned off a screen, or from paper that
+        will not be handled, and you want the sparsest possible pattern. It is
+        also the best choice when your URL is long and the printed size is fixed
+        and small, because it keeps the modules as large as they can be. Do not
+        use it for anything that will live in the physical world for months.
+      </p>
+
+      <h3>Level Q — printed labels and anything handled</h3>
+      <p>
+        This is the level for
+        <a href="qr-codes-for-asset-inventory-labels.html"
+          >asset tags and inventory labels</a
+        >: equipment that gets moved, wiped down, scraped past doorframes. Also
+        good for
+        <a href="qr-codes-for-event-badges-name-tags.html">event badges</a>,
+        which spend a day being creased inside lanyards.
+      </p>
+
+      <h3>Level H — logos, harsh conditions, generous size</h3>
+      <p>Reserve H for three situations:</p>
+      <ul>
+        <li>
+          <strong>A logo in the middle.</strong> Covering the centre of a code
+          destroys data, and only H reliably tolerates it. This is the main reason
+          H exists in practice.
+        </li>
+        <li>
+          <strong>Genuinely harsh environments</strong> — outdoor signage, or
+          anywhere the surface will be scratched or partly obscured.
+        </li>
+        <li>
+          <strong>Large printed codes</strong> where the extra modules cost you
+          nothing because there is plenty of physical space.
+        </li>
+      </ul>
+
+      <h2>Setting it here</h2>
+      <p>
+        The <a href="../index.html">generator</a> has an
+        <strong>Error correction</strong> dropdown alongside the size and format
+        options. It applies to every code in the batch, and to both PNG and
+        <a href="bulk-qr-codes-as-svg.html">SVG output</a> — the level changes the
+        pattern itself, not the file format.
+      </p>
+      <p>
+        Because it is a batch-wide setting, split your run if different codes need
+        different levels: generate the outdoor signage at H, then generate the
+        screen-facing codes at M.
+      </p>
+
+      <h2>Level and size together</h2>
+      <p>
+        The two settings interact, and the combinations that work look roughly
+        like this:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>Level</th>
+            <th>Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>On-screen, web page, email</td>
+            <td>L or M</td>
+            <td>300 px</td>
+          </tr>
+          <tr>
+            <td>Event badge, business card</td>
+            <td>Q</td>
+            <td>300 px</td>
+          </tr>
+          <tr>
+            <td>Asset label on equipment</td>
+            <td>Q</td>
+            <td>300–600 px</td>
+          </tr>
+          <tr>
+            <td>Flyer, table tent, menu</td>
+            <td>M</td>
+            <td>600 px</td>
+          </tr>
+          <tr>
+            <td>Outdoor sign, poster</td>
+            <td>H</td>
+            <td>1000 px or SVG</td>
+          </tr>
+          <tr>
+            <td>Code with a logo overlaid</td>
+            <td>H</td>
+            <td>600 px or larger</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>The shortcut that beats all of this</h2>
+      <p>
+        Shortening the URL reduces the module count far more dramatically than
+        lowering the error correction level ever will. A code encoding
+        <code>https://ex.co/a1</code> at level H can easily be sparser — and
+        therefore more scannable — than one encoding a long tracking URL at level
+        L.
+      </p>
+      <p>
+        If a code has to be small and reliable, the first move is a shorter URL,
+        not a lower level. Redirecting through a short path on a domain you
+        control also means you can change the destination later, which static QR
+        codes otherwise do not allow.
+      </p>
+
+      <div class="callout">
+        <p>
+          Whatever you choose, print one code at the real size on the real
+          material and scan it under the real lighting. That single test tells you
+          more than any table.
+        </p>
+      </div>
+
+      <!-- AD SLOT: end-of-content unit. Add after AdSense approval. -->
+
+      <p><a class="cta" href="../index.html">Open the generator</a></p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
