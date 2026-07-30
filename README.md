@@ -17,7 +17,7 @@ A React-based web application that generates QR codes from a CSV file or from UR
 
 ## Live Demo
 
-Visit the live application at: [https://batchqrcodes.com](https://batchqrcodes.com)
+Visit the live application at: [https://www.batchqrcodes.com](https://www.batchqrcodes.com)
 
 ## Installation
 
@@ -135,7 +135,7 @@ public/
   robots.txt  sitemap.xml  ads.txt  CNAME
 ```
 
-Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. `homepage` in `package.json` is `"."` for the same reason — it makes CRA emit relative asset paths. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://batchqrcodes.com/`.
+Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. `homepage` in `package.json` is `"."` for the same reason — it makes CRA emit relative asset paths. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://www.batchqrcodes.com/` — the `www` subdomain is canonical, matching `public/CNAME`; see [DEPLOYMENT.md](DEPLOYMENT.md) for why.
 
 This split is deliberate. Googlebot defers JavaScript rendering to a second
 crawl wave, and AI crawlers (GPTBot, ClaudeBot, PerplexityBot) do not execute JS

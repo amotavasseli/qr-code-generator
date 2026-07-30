@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://batchqrcodes.com/sitemap.xml
+Sitemap: https://www.batchqrcodes.com/sitemap.xml
