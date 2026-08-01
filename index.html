@@ -3,12 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406817277744469"
-      crossorigin="anonymous"
-    ></script>
-    <meta name="google-adsense-account" content="ca-pub-9406817277744469" />
     <link rel="icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
@@ -59,14 +53,20 @@
           "priceCurrency": "USD"
         },
         "featureList": [
-          "Bulk QR code generation from CSV",
+          "Bulk QR code generation from CSV or Excel",
           "Manual entry form with per-row copies",
           "Paste a list of URLs, one per line",
+          "Numbered sequence generator for asset tags",
+          "Wi-Fi, vCard, phone, SMS and email QR codes",
+          "Custom foreground and background colours",
+          "Logo in the centre of the code",
+          "Live preview",
           "Custom filenames from any spreadsheet column",
           "Multiple QR codes per image with printed labels",
           "PNG or SVG vector output",
           "Selectable size and error correction level",
           "ZIP download",
+          "Static codes that never expire",
           "Client-side only — no data upload"
         ]
       }
@@ -107,6 +107,22 @@
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "There is no hard limit. Because generation happens in your browser, the practical ceiling is your device's memory and patience — several thousand codes in one batch is normal, though very large batches take a minute to process."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I add a logo to the QR code?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Upload an image and it is drawn in the centre of every code, on a small plate of background colour so it reads as deliberate. Error correction is forced to High while a logo is set, because the logo covers modules that only the highest level can recover. Always test-scan a code with a logo before committing to a print run."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I change the colours of the QR code?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, both the code and the background. The tool checks the contrast between the pair and warns you when they are too close together for a phone to read reliably — scanners need roughly a 3:1 ratio, and it also flags light-on-dark codes, which older readers struggle with."
             }
           },
           {
@@ -158,6 +174,7 @@
         <li>No signup</li>
         <li>No limits</li>
         <li>No watermark</li>
+        <li>Codes never expire</li>
         <li>Nothing leaves your browser</li>
       </ul>
     </div>
@@ -175,8 +192,7 @@
 
     <!-- React mounts the generator here; everything outside #root is static HTML. -->
     <div id="root"></div>
-
-    <!-- AD SLOT: responsive unit, directly below the tool. Add after AdSense approval. -->
+    <script type="module" src="/src/main.tsx"></script>
 
     <main class="card prose">
       <h2>What this tool does</h2>
@@ -220,6 +236,33 @@
           computer.
         </li>
       </ul>
+
+      <h2>These codes never expire</h2>
+      <p>
+        Most QR code generators hand you a <strong>dynamic</strong> code, which
+        does not encode your link at all — it encodes a short URL on
+        <em>their</em> domain that redirects to yours. That is what makes the
+        destination editable, and it is also why so many printed codes stop
+        working: when the trial ends, the subscription lapses, the monthly scan
+        cap is hit or the company shuts down, the redirect dies and every
+        sticker, menu and poster you printed dies with it.
+      </p>
+      <p>
+        Everything this tool produces is <strong>static</strong>. Your
+        destination is encoded directly into the black and white pattern, with
+        nothing in the middle. There is no account, no redirect on our domain, no
+        scan limit and no plan tier — so there is nothing anyone could switch
+        off, and nothing that breaks if this site ever disappears. A code you
+        generate today will still scan in twenty years.
+      </p>
+      <p>
+        The trade-off is real and worth stating: you cannot change where a
+        printed static code points, and you get no scan analytics. If you want
+        both, encode a URL on a domain you control and redirect from your own
+        server — permanent codes, editable destinations, and nobody else holding
+        the switch. See
+        <a href="guides/do-qr-codes-expire.html">do QR codes expire?</a> for how.
+      </p>
 
       <h2>How to generate QR codes in bulk</h2>
       <ol>
@@ -334,6 +377,30 @@
       </div>
 
       <div class="faq-item">
+        <h3>Can I add a logo to the QR code?</h3>
+        <p>
+          Yes. Upload an image and it is drawn in the centre of every code, on a
+          small plate of background colour so it reads as deliberate rather than
+          as damage. Error correction is forced to <strong>High</strong> while a
+          logo is set, because a logo covers modules that only the highest level
+          can reconstruct. Keep it under about a quarter of the width, and
+          <strong>always test-scan</strong> before committing to a print run.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I change the colours?</h3>
+        <p>
+          Yes, both the code and its background. The tool measures the contrast
+          between the two and warns you when they are too close together for a
+          phone to read — scanners want roughly a 3:1 ratio, well short of the
+          brand palette pairings people usually reach for. It also flags
+          light-on-dark codes, which scan fine on modern phones but defeat some
+          older readers.
+        </p>
+      </div>
+
+      <div class="faq-item">
         <h3>Can I name the files something other than a number?</h3>
         <p>
           Yes, and this is the main reason the tool exists. After uploading your
@@ -375,6 +442,13 @@
             >How to generate QR codes in bulk from a CSV file</a
           >
           <span>The full walkthrough, from spreadsheet to ZIP.</span>
+        </li>
+        <li>
+          <a href="guides/do-qr-codes-expire.html">Do QR codes expire?</a>
+          <span
+            >They do not — but dynamic codes stop working the moment somebody
+            stops paying.</span
+          >
         </li>
         <li>
           <a href="guides/print-sheet-of-identical-qr-codes.html"

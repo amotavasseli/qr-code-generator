@@ -57,13 +57,7 @@ The repo contains the scaffolding; these steps happen outside it.
 1. **Before applying** — confirm the site is live on the custom domain with
    HTTPS, and that `/privacy.html`, `/terms.html`, `/about.html` and
    `/contact.html` all load.
-2. **`public/ads.txt`** currently holds a placeholder publisher ID
-   (`pub-0000000000000000`). Replace it with your real ID after approval and
-   redeploy. It must remain at the domain root — `https://www.batchqrcodes.com/ads.txt`.
-3. **Ad units** — the HTML files contain `<!-- AD SLOT: ... -->` comments marking
-   the intended positions (below the tool, mid-guide, end-of-guide). Add the
-   AdSense script and unit code at those points only after approval.
-4. **Consent for EEA/UK/Switzerland traffic** — serving personalised ads there
+2. **Consent for EEA/UK/Switzerland traffic** — serving personalised ads there
    requires a Google-certified CMP integrated with IAB TCF. A hand-written cookie
    banner does **not** satisfy this and non-compliance can suspend the account.
    Enable Google's own **Privacy & messaging** (Funding Choices) in the AdSense
@@ -119,19 +113,19 @@ This will build the app and push it to the `gh-pages` branch, which GitHub Pages
 
 The deployment is configured in `package.json`:
 
-- `homepage`: `"."` — emits relative asset paths (see the custom domain section)
-- `predeploy`: Builds the app before deploying
-- `deploy`: Uses gh-pages package to deploy the build folder
+- `base: '/'` in `vite.config.ts` — the site is served from the root of the
+  custom domain (see the custom domain section)
+- `predeploy`: Typechecks and builds the app before deploying
+- `deploy`: Uses the gh-pages package to publish the `dist` folder
 
 ### Static files served at the domain root
 
-Everything in `public/` is copied verbatim into `build/`. These must stay at the
-root to work:
+Everything in `public/` is copied verbatim into `dist/`, unbundled and
+unrewritten. These must stay at the root to work:
 
 | File | Purpose |
 | --- | --- |
 | `CNAME` | Tells GitHub Pages which custom domain to serve |
-| `ads.txt` | AdSense publisher verification |
 | `robots.txt` | Crawler directives, points at the sitemap |
 | `sitemap.xml` | Lists all 14 URLs for search engines |
 | `site.css` | Shared styling for the static content pages |
@@ -167,16 +161,23 @@ adding a new guide, remember to add it to `sitemap.xml` and link it from
 To test the app locally before deploying:
 
 ```bash
-npm start
+npm run dev
 ```
 
-This will start the development server at `http://localhost:3000`. The static
-content pages are served from the same origin during development, so
-`http://localhost:3000/about.html` and `http://localhost:3000/guides/` work
+This starts the Vite dev server at `http://localhost:5173`. The static content
+pages are served from the same origin during development, so
+`http://localhost:5173/about.html` and `http://localhost:5173/guides/` work
 exactly as they will in production.
+
+To check the real production output instead — including the built asset hashes
+and every static page as it will actually ship:
+
+```bash
+npm run build && npm run preview
+```
 
 ## Additional Resources
 
 - [GitHub Pages Documentation](https://docs.github.com/en/pages)
-- [Create React App Deployment Guide](https://create-react-app.dev/docs/deployment/)
+- [Vite Static Deploy Guide](https://vite.dev/guide/static-deploy)
 - [gh-pages Package](https://www.npmjs.com/package/gh-pages)

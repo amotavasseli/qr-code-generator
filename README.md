@@ -4,15 +4,22 @@ A React-based web application that generates QR codes from a CSV file or from UR
 
 ## Features
 
-- 📁 Upload CSV files containing URLs
+- 📁 Upload CSV **or Excel** (`.xlsx`, `.xls`) files containing URLs
 - ✍️ Or enter URLs in a form, one row at a time, with a copies count per row
 - 📋 Or paste a list, one URL per line, comma- or tab-separated
-- 🔢 Generate multiple QR codes on a single image (batch mode), with optional labels
+- 🔢 Or generate a numbered **sequence** — prefix, range, step and zero-padding
+- 📶 Or build a **Wi-Fi, vCard, phone, SMS or email** code from a form
+- 👁️ Live preview that redraws as you change anything
+- 🎨 Custom foreground and background colours, with a **contrast check** that
+  warns when a pair is too close together to scan
+- 🖼️ Optional **logo** in the centre, which forces error correction to High
+- 🧱 Generate multiple QR codes on a single image (batch mode), with optional labels
 - 🏷️ Name output files from any column you choose, with an optional prefix
 - 🖼️ PNG (300/600/1000 px) or SVG vector output
 - 🛡️ Selectable error correction level (L/M/Q/H)
 - 📦 Download all QR codes as a ZIP file
-- 🎨 Clean and responsive user interface
+- ⏳ Every code is **static** — no redirect, no account, nothing that expires
+- 🔒 Runs entirely in the browser; nothing is uploaded
 - 🚀 Hosted on GitHub Pages
 
 ## Live Demo
@@ -30,10 +37,10 @@ npm install
 ### Development
 
 ```bash
-npm start
+npm run dev
 ```
 
-Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the Vite dev server. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 
 ### Build
 
@@ -41,7 +48,9 @@ Runs the app in development mode. Open [http://localhost:3000](http://localhost:
 npm run build
 ```
 
-Builds the app for production to the `build` folder.
+Typechecks with `tsc`, then builds for production into the `dist` folder. Serve
+that output locally with `npm run preview` — worth doing before any deploy, since
+it is the only way to check the static guide pages as they will actually ship.
 
 ### Deploy to GitHub Pages
 
@@ -75,6 +84,25 @@ Switch to the "Enter manually" tab to type URLs directly. Each row takes a URL, 
 
 Set **Copies** to repeat the same URL. One row with 20 copies and "QR codes per image" set to 20 produces a single sheet filled with that one code — handy for printing a page of identical codes.
 
+### Sequence
+
+Generates a numbered run without a list — asset tags, seat numbers, ticket
+stubs. Set a prefix, suffix, range, step and zero-padding; each code encodes its
+own identifier and is named after it. Capped at 10,000 codes per batch so a
+runaway range cannot lock up the tab.
+
+### Wi-Fi & more
+
+Builds a single code from a structured form for one of: Wi-Fi network, contact
+card (vCard), phone number, SMS, email, or plain text. These are still static QR
+codes — only the payload string differs, using the prefixes phones recognise
+(`WIFI:`, `BEGIN:VCARD`, `tel:`, `SMSTO:`, `mailto:`). Characters that are
+structural in those formats (`;` `,` `"` `\`) are escaped, and vCards use CRLF
+line endings as the spec requires.
+
+Note that a Wi-Fi code carries the password in plain text inside the pattern —
+treat a printed one the way you would treat the password itself.
+
 ### Paste a list
 
 The "Paste a list" tab takes one URL per line. Add a filename after a comma or a tab:
@@ -93,7 +121,9 @@ Tab separation means two columns copied straight out of a spreadsheet work witho
 | --- | --- | --- |
 | File format | PNG, SVG | SVG is vector and only available at 1 code per image, since combined sheets are composed on a canvas |
 | Size | 300, 600, 1000 px | In batch mode this sets each cell; the label strip scales with it |
-| Error correction | L, M, Q, H | Higher tolerates more damage but produces a denser pattern |
+| Error correction | L, M, Q, H | Higher tolerates more damage but produces a denser pattern. Locked to H whenever a logo is set |
+| Colours | any hex pair | Contrast is measured; below roughly 3:1 the tool warns that phones will struggle. Light-on-dark is flagged separately |
+| Logo | any image, 10–30% | Drawn centred on a plate of background colour, aspect ratio preserved. Always test-scan before a print run |
 
 Delimiter detection is automatic for uploaded CSVs — comma, semicolon and tab all parse correctly.
 
@@ -122,20 +152,42 @@ Delimiter detection is automatic for uploaded CSVs — comma, semicolon and tab 
 ## Site structure
 
 The React app is the generator only. Everything else on the site is plain static
-HTML in `public/`, which CRA copies verbatim into `build/`:
+HTML that Vite copies verbatim from `public/` into `dist/`:
 
 ```
+index.html        Vite's entry. The React tool mounts into #root; the H1, FAQ,
+                  how-to and footer around it are static markup so crawlers see
+                  them without executing JavaScript
 public/
-  index.html      React tool mounts into #root; the H1, FAQ, how-to and
-                  footer around it are static markup so crawlers see them
-                  without executing JavaScript
-  site.css        shared styling for all static pages
+  site.css        shared styling for all static pages, and the single source of
+                  truth for the colour palette (see "Styling" below)
   about.html  contact.html  privacy.html  terms.html
-  guides/         eight long-form guides + an index
-  robots.txt  sitemap.xml  ads.txt  CNAME
+  guides/         sixteen long-form guides + an index
+  robots.txt  sitemap.xml  CNAME  .nojekyll
 ```
 
-Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. `homepage` in `package.json` is `"."` for the same reason — it makes CRA emit relative asset paths. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://www.batchqrcodes.com/` — the `www` subdomain is canonical, matching `public/CNAME`; see [DEPLOYMENT.md](DEPLOYMENT.md) for why.
+Only `index.html` is a Vite entry. Nothing in `public/` is bundled, parsed or
+rewritten — it lands in `dist/` byte-for-byte, which is exactly what the guide
+library wants.
+
+Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://www.batchqrcodes.com/` — the `www` subdomain is canonical, matching `public/CNAME`; see [DEPLOYMENT.md](DEPLOYMENT.md) for why.
+
+## Styling
+
+Two systems share the homepage, so the boundary between them is deliberate:
+
+- `public/site.css` styles the hand-written header, hero, prose and footer, and
+  declares the palette in `:root`. It is the **only** place colours are defined.
+- `src/index.css` re-expresses those same custom properties under the names
+  Tailwind and shadcn expect. Change a colour in `site.css` and both the static
+  pages and the React tool follow.
+
+Tailwind is imported **without preflight**. Its global element reset stripped the
+bullets off every `.prose` list and unbolded every heading on the static pages;
+`src/index.css` supplies a replacement reset scoped to `#root` instead. The
+`@layer` order declared at the top of `site.css` also keeps that file's universal
+`* { margin: 0 }` reset from outranking Tailwind utilities inside the tool —
+unlayered rules beat layered ones regardless of specificity.
 
 This split is deliberate. Googlebot defers JavaScript rendering to a second
 crawl wave, and AI crawlers (GPTBot, ClaudeBot, PerplexityBot) do not execute JS
@@ -148,7 +200,9 @@ the homepage.
 
 ## Technologies Used
 
-- **React 19**: UI framework
+- **React 19** + **TypeScript**: UI framework
+- **Vite**: build tool and dev server
+- **Tailwind CSS v4** + **shadcn/ui** + **Lucide**: styling and components
 - **qrcode**: QR code generation
 - **JSZip**: ZIP file creation
 - **PapaParse**: CSV parsing
