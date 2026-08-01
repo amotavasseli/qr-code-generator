@@ -57,13 +57,7 @@ The repo contains the scaffolding; these steps happen outside it.
 1. **Before applying** — confirm the site is live on the custom domain with
    HTTPS, and that `/privacy.html`, `/terms.html`, `/about.html` and
    `/contact.html` all load.
-2. **`public/ads.txt`** currently holds a placeholder publisher ID
-   (`pub-0000000000000000`). Replace it with your real ID after approval and
-   redeploy. It must remain at the domain root — `https://www.batchqrcodes.com/ads.txt`.
-3. **Ad units** — the HTML files contain `<!-- AD SLOT: ... -->` comments marking
-   the intended positions (below the tool, mid-guide, end-of-guide). Add the
-   AdSense script and unit code at those points only after approval.
-4. **Consent for EEA/UK/Switzerland traffic** — serving personalised ads there
+2. **Consent for EEA/UK/Switzerland traffic** — serving personalised ads there
    requires a Google-certified CMP integrated with IAB TCF. A hand-written cookie
    banner does **not** satisfy this and non-compliance can suspend the account.
    Enable Google's own **Privacy & messaging** (Funding Choices) in the AdSense
@@ -132,7 +126,6 @@ unrewritten. These must stay at the root to work:
 | File | Purpose |
 | --- | --- |
 | `CNAME` | Tells GitHub Pages which custom domain to serve |
-| `ads.txt` | AdSense publisher verification |
 | `robots.txt` | Crawler directives, points at the sitemap |
 | `sitemap.xml` | Lists all 14 URLs for search engines |
 | `site.css` | Shared styling for the static content pages |

@@ -135,7 +135,7 @@ public/
                   truth for the colour palette (see "Styling" below)
   about.html  contact.html  privacy.html  terms.html
   guides/         sixteen long-form guides + an index
-  robots.txt  sitemap.xml  ads.txt  CNAME  .nojekyll
+  robots.txt  sitemap.xml  CNAME  .nojekyll
 ```
 
 Only `index.html` is a Vite entry. Nothing in `public/` is bundled, parsed or
@@ -172,7 +172,9 @@ the homepage.
 
 ## Technologies Used
 
-- **React 19**: UI framework
+- **React 19** + **TypeScript**: UI framework
+- **Vite**: build tool and dev server
+- **Tailwind CSS v4** + **shadcn/ui** + **Lucide**: styling and components
 - **qrcode**: QR code generation
 - **JSZip**: ZIP file creation
 - **PapaParse**: CSV parsing
