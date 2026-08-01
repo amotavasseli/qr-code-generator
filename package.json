@@ -27,7 +27,6 @@
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
-    "@rolldown/binding-darwin-arm64": "^1.2.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.1.2",
     "@types/papaparse": "^5.5.2",
