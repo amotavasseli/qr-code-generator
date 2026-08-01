@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <title>Do QR Codes Expire? Why Some Stop Working and Others Never Do</title>
+    <meta
+      name="description"
+      content="QR codes have no built-in expiry date. Codes that stop working were dynamic codes on a service that ended a trial or shut down. How to tell which kind you have, and how to make codes that never expire."
+    />
+    <link
+      rel="canonical"
+      href="https://www.batchqrcodes.com/guides/do-qr-codes-expire.html"
+    />
+    <link rel="stylesheet" href="../site.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Do QR codes expire?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. A QR code is a printed pattern, not an account. There is no expiry date anywhere in the specification and no clock running against it. A static QR code you generate today will still scan in twenty years, because the destination is encoded directly into the pattern itself."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why did my QR code stop working then?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Almost certainly because it was a dynamic QR code. Dynamic codes do not encode your destination — they encode a short link on the generator's own domain, which redirects. When the free trial ends, the subscription lapses, the scan limit is hit, or the company shuts down, that redirect stops resolving and every code you printed dies at once."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I tell if my QR code will expire?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Scan it and look at the URL your phone shows before opening it. If you see your own destination, the code is static and permanent. If you see a short domain belonging to the generator, it is dynamic and depends on that company continuing to run the redirect."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I make a QR code that never expires?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Generate a static code that encodes your real destination directly. If you also want to be able to change where it points later, encode a URL on a domain you control and redirect from your own server — that gives you editable destinations with no third party who can switch them off."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="../index.html">Batch QR Codes</a>
+        <a href="index.html">Guides</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <main class="card prose">
+      <h1>Do QR codes expire?</h1>
+      <p class="page-meta">Last updated: July 2026 · About 5 minutes</p>
+
+      <p>
+        No. A QR code is a printed pattern, not an account. There is no expiry
+        field in the specification, no clock running against it, and nothing that
+        needs renewing. A code you generate today will still scan in twenty
+        years, in exactly the same way a barcode printed on a tin of soup in 1998
+        still scans.
+      </p>
+
+      <p>
+        So why do so many people search for this? Because a great many QR codes
+        <em>do</em> stop working — and the reason has nothing to do with the code
+        and everything to do with who is standing behind it.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>The short version.</strong> Static codes never expire. Dynamic
+          codes expire the moment somebody stops paying for them. If your code
+          died, it was dynamic.
+        </p>
+      </div>
+
+      <h2>What actually broke</h2>
+
+      <p>
+        A <strong>static</strong> QR code encodes your destination directly. The
+        URL is physically present in the black and white pattern. Nothing sits in
+        the middle, so there is nothing that can be switched off. Scanning it is
+        a purely local act between the phone's camera and the ink.
+      </p>
+
+      <p>
+        A <strong>dynamic</strong> QR code does not encode your destination at
+        all. It encodes a short link on the generator's own domain — something
+        like <code>qr-example.co/aX9k2</code> — which redirects to wherever you
+        pointed it. That indirection is what allows the destination to be edited
+        after printing, and it is also the single point of failure. The redirect
+        stops resolving when:
+      </p>
+
+      <ul>
+        <li>the free trial ends;</li>
+        <li>the subscription lapses or a card is declined;</li>
+        <li>the plan's monthly scan limit is reached;</li>
+        <li>the code count exceeds what the tier allows;</li>
+        <li>the company is acquired, pivots, or shuts down.</li>
+      </ul>
+
+      <p>
+        The last one is the one that catches people out, because it takes
+        everything at once. Every sticker, menu, poster and business card you
+        printed through that service stops working on the same day, and there is
+        no way to fix them without reprinting.
+      </p>
+
+      <h2>How to tell which kind you have</h2>
+
+      <p>
+        Point a phone at the code and look at the URL <em>before</em> you open
+        it. Most camera apps show the destination as a preview banner rather than
+        navigating immediately.
+      </p>
+
+      <ul>
+        <li>
+          <strong>You see your own address</strong> —
+          <code>yourcompany.com/menu</code>. The code is static. It is permanent
+          and owes nothing to anyone.
+        </li>
+        <li>
+          <strong>You see a domain you do not recognise</strong> — a short,
+          unfamiliar host followed by a random string. The code is dynamic, and
+          it will keep working exactly as long as that company keeps the redirect
+          running.
+        </li>
+      </ul>
+
+      <p>
+        This is worth checking before a print run, not after. The cost of the
+        distinction is not the subscription — it is the reprint.
+      </p>
+
+      <h2>What you give up by staying static</h2>
+
+      <p>
+        Static codes are not free of trade-offs, and it would be dishonest to
+        pretend otherwise. You lose two things:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Editable destinations.</strong> Once printed, a static code
+          points where it points, forever.
+        </li>
+        <li>
+          <strong>Scan analytics.</strong> Nothing is counting, because nothing
+          is in the middle to count.
+        </li>
+      </ul>
+
+      <p>
+        For a great many uses — a table number, an asset tag, a Wi-Fi network, a
+        link to a page you control — neither of those matters at all.
+      </p>
+
+      <h2>How to get both: permanence and editability</h2>
+
+      <p>
+        There is a third option that most pricing pages skip, and it is usually
+        the right one for anything printed at scale: encode a URL
+        <strong>on a domain you own</strong>, and redirect from your own server.
+      </p>
+
+      <p>
+        Print a static code pointing at
+        <code>yourcompany.com/go/menu</code>. That is a permanent, static code —
+        nobody can turn it off. But because you control what
+        <code>/go/menu</code> does, you can change where it lands whenever you
+        like, and your own server logs give you the scan counts. You get the
+        editability and the analytics without handing anyone a switch to your
+        printed materials.
+      </p>
+
+      <p>
+        A redirect rule is a handful of lines in nearly any web server or CMS,
+        and it does not expire, because you are the one paying for the domain
+        either way. See
+        <a href="static-vs-dynamic-qr-codes.html">static vs dynamic QR codes</a>
+        for how to set that up.
+      </p>
+
+      <h2>Codes from this tool never expire</h2>
+
+      <p>
+        Every code
+        <a href="../index.html">this generator</a> produces is static. Your
+        destination is encoded straight into the pattern, the image is drawn by
+        JavaScript on your own machine, and the file is yours. There is no
+        account, no redirect on our domain, no scan cap and no plan tier —
+        which means there is nothing we could switch off even if we wanted to,
+        and nothing that stops working if this site ever disappears.
+      </p>
+
+      <p>
+        That is not a feature we added. It is a consequence of the architecture:
+        there is no server here that could sit in the middle of your codes.
+      </p>
+
+      <h2>Related guides</h2>
+      <ul>
+        <li>
+          <a href="static-vs-dynamic-qr-codes.html"
+            >Static vs dynamic QR codes: which do you actually need?</a
+          >
+        </li>
+        <li>
+          <a href="why-qr-code-not-scanning.html"
+            >Why is my QR code not scanning?</a
+          >
+        </li>
+        <li>
+          <a href="qr-code-error-correction-levels.html"
+            >QR code error correction levels explained</a
+          >
+        </li>
+      </ul>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>© 2026 Batch QR Codes</span>
+        <nav>
+          <a href="index.html">Guides</a>
+          <a href="../about.html">About</a>
+          <a href="../contact.html">Contact</a>
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Use</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

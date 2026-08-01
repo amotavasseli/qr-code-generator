@@ -5,8 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type Props = {
-  csvFile: File | null;
-  csvHeaders: string[];
+  sheetFile: File | null;
+  sheetHeaders: string[];
   urlColumn: string;
   setUrlColumn: (value: string) => void;
   filenameColumn: string;
@@ -19,8 +19,8 @@ type Props = {
 const NUMBERED = '__numbered__';
 
 export function CsvInput({
-  csvFile,
-  csvHeaders,
+  sheetFile,
+  sheetHeaders,
   urlColumn,
   setUrlColumn,
   filenameColumn,
@@ -36,27 +36,27 @@ export function CsvInput({
         className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/40 px-6 py-8 text-center transition-colors hover:border-primary hover:bg-primary-subtle/40"
       >
         <Upload className="size-6 text-primary" />
-        <span className="text-sm font-medium">Choose a CSV file</span>
+        <span className="text-sm font-medium">Choose a CSV or Excel file</span>
         <span className="text-xs text-muted-foreground">
-          A header row and a column of URLs is all it needs
+          .csv, .xlsx or .xls — a header row and a column of URLs is all it needs
         </span>
       </label>
       <input
         id="csv-upload"
         type="file"
-        accept=".csv"
+        accept=".csv,.xlsx,.xls"
         className="sr-only"
         onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
       />
 
-      {csvFile && (
+      {sheetFile && (
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <FileSpreadsheet className="size-4 text-primary" />
-          {csvFile.name}
+          {sheetFile.name}
         </p>
       )}
 
-      {csvHeaders.length > 0 && (
+      {sheetHeaders.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="url-column">Column containing URLs</Label>
@@ -65,7 +65,7 @@ export function CsvInput({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {csvHeaders.map((header) => (
+                {sheetHeaders.map((header) => (
                   <SelectItem key={header} value={header}>
                     {header}
                   </SelectItem>
@@ -85,7 +85,7 @@ export function CsvInput({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={NUMBERED}>Numbered (qr_code_1, qr_code_2…)</SelectItem>
-                {csvHeaders.map((header) => (
+                {sheetHeaders.map((header) => (
                   <SelectItem key={header} value={header}>
                     {header}
                   </SelectItem>

@@ -1,14 +1,24 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { buildZip, downloadBlob } from '@/lib/export';
-import { csvRowsToItems, detectUrlColumn, parseCsvFile, parsePastedList } from '@/lib/parse';
+import {
+  detectUrlColumn,
+  parsePastedList,
+  parseSpreadsheet,
+  rowsToItems,
+  SPREADSHEET_EXTENSIONS
+} from '@/lib/parse';
+import { generateQRCode } from '@/lib/qr';
+import { buildSequence, sequenceCount, type SequenceFields } from '@/lib/sequence';
 import type {
   CsvRow,
   ErrorLevel,
   ExportOptions,
   InputMode,
+  Logo,
   ManualEntry,
   OutputFormat,
-  QrItem
+  QrItem,
+  RenderOptions
 } from '@/lib/types';
 
 let nextEntryId = 1;
@@ -20,18 +30,31 @@ const blankEntry = (): ManualEntry => ({
   copies: 1
 });
 
+const DEFAULT_SEQUENCE: SequenceFields = {
+  prefix: 'ASSET-',
+  suffix: '',
+  start: 1,
+  end: 25,
+  step: 1,
+  padTo: 4
+};
+
 export function useQrGenerator() {
   const [inputMode, setInputMode] = useState<InputMode>('csv');
 
-  const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
-  const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
+  const [sheetFile, setSheetFile] = useState<File | null>(null);
+  const [sheetHeaders, setSheetHeaders] = useState<string[]>([]);
+  const [sheetRows, setSheetRows] = useState<CsvRow[]>([]);
   const [urlColumn, setUrlColumn] = useState('');
   const [filenameColumn, setFilenameColumn] = useState('');
   const [filenamePrefix, setFilenamePrefix] = useState('qr_');
 
   const [manualEntries, setManualEntries] = useState<ManualEntry[]>([blankEntry()]);
   const [pastedList, setPastedList] = useState('');
+  const [sequence, setSequence] = useState<SequenceFields>(DEFAULT_SEQUENCE);
+  // Built by the Wi-Fi / vCard / phone forms, which own their own field state.
+  const [typedPayload, setTypedPayload] = useState('');
+  const [typedName, setTypedName] = useState('qr_code');
 
   const [qrPerImage, setQrPerImage] = useState(1);
   const [includeLabels, setIncludeLabels] = useState(true);
@@ -39,13 +62,22 @@ export function useQrGenerator() {
   const [qrSize, setQrSize] = useState(300);
   const [errorLevel, setErrorLevel] = useState<ErrorLevel>('M');
 
+  const [foreground, setForeground] = useState('#000000');
+  const [background, setBackground] = useState('#ffffff');
+  const [logo, setLogo] = useState<Logo | null>(null);
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [status, setStatus] = useState('');
 
-  const resetCsvState = () => {
-    setCsvFile(null);
-    setCsvHeaders([]);
-    setCsvRows([]);
+  const renderOptions: RenderOptions = useMemo(
+    () => ({ size: qrSize, errorLevel, foreground, background, logo }),
+    [qrSize, errorLevel, foreground, background, logo]
+  );
+
+  const resetSheetState = () => {
+    setSheetFile(null);
+    setSheetHeaders([]);
+    setSheetRows([]);
     setUrlColumn('');
     setFilenameColumn('');
   };
@@ -53,29 +85,30 @@ export function useQrGenerator() {
   const handleFileChange = async (file: File | null) => {
     if (!file) return;
 
-    if (!file.name.toLowerCase().endsWith('.csv')) {
-      setStatus('Please upload a file with a .csv extension.');
-      resetCsvState();
+    const name = file.name.toLowerCase();
+    if (!SPREADSHEET_EXTENSIONS.some((ext) => name.endsWith(ext))) {
+      setStatus('Please choose a .csv, .xlsx or .xls file.');
+      resetSheetState();
       return;
     }
 
-    setStatus('Reading CSV file...');
+    setStatus('Reading file…');
 
     try {
-      const { headers, rows } = await parseCsvFile(file);
+      const { headers, rows } = await parseSpreadsheet(file);
 
-      setCsvFile(file);
-      setCsvHeaders(headers);
-      setCsvRows(rows);
+      setSheetFile(file);
+      setSheetHeaders(headers);
+      setSheetRows(rows);
       setUrlColumn(detectUrlColumn(headers));
       setFilenameColumn('');
       setStatus(
-        `CSV file loaded with ${rows.length} row${rows.length === 1 ? '' : 's'}. ` +
+        `Loaded ${rows.length} row${rows.length === 1 ? '' : 's'}. ` +
           'Choose your columns, then click "Generate QR Codes".'
       );
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Could not read that CSV file.');
-      resetCsvState();
+      setStatus(error instanceof Error ? error.message : 'Could not read that file.');
+      resetSheetState();
     }
   };
 
@@ -94,25 +127,67 @@ export function useQrGenerator() {
   const removeManualEntry = (id: number) =>
     setManualEntries((entries) => entries.filter((entry) => entry.id !== id));
 
-  const exportOptions = (): ExportOptions => ({
-    size: qrSize,
-    errorLevel,
-    qrPerImage,
-    includeLabels,
-    outputFormat,
-    filenamePrefix
-  });
+  const updateSequence = <K extends keyof SequenceFields>(field: K, value: SequenceFields[K]) =>
+    setSequence((s) => ({ ...s, [field]: value }));
 
-  const generateAndDownload = async (items: QrItem[], prefix = '') => {
+  /** Collects whatever the active tab holds into the shared item shape. */
+  const collectItems = useCallback((): QrItem[] => {
+    if (inputMode === 'csv') return rowsToItems(sheetRows, urlColumn, filenameColumn);
+    if (inputMode === 'paste') return parsePastedList(pastedList);
+    if (inputMode === 'sequence') return buildSequence(sequence);
+    if (inputMode === 'types')
+      return typedPayload ? [{ url: typedPayload, name: typedName }] : [];
+
+    // A row with copies > 1 repeats the same URL that many times, so a single
+    // value can fill a whole sheet.
+    return manualEntries
+      .filter((entry) => entry.url.trim())
+      .flatMap((entry) =>
+        Array.from({ length: entry.copies }, () => ({
+          url: entry.url.trim(),
+          name: entry.filename.trim()
+        }))
+      );
+  }, [
+    inputMode,
+    sheetRows,
+    urlColumn,
+    filenameColumn,
+    pastedList,
+    sequence,
+    typedPayload,
+    typedName,
+    manualEntries
+  ]);
+
+  const items = useMemo(() => collectItems(), [collectItems]);
+
+  const generateAndDownload = async () => {
+    if (inputMode === 'csv' && !sheetFile) {
+      setStatus('Please choose a file first.');
+      return;
+    }
+
+    if (items.length === 0) {
+      setStatus('There is nothing to generate yet.');
+      return;
+    }
+
     setIsProcessing(true);
-    setStatus(`Found ${items.length} URLs. Generating QR codes...`);
+    setStatus(`Found ${items.length} entries. Generating QR codes…`);
 
     try {
-      const { blob, fileCount } = await buildZip(
-        items,
-        { ...exportOptions(), filenamePrefix: prefix },
-        setStatus
-      );
+      const options: ExportOptions = {
+        ...renderOptions,
+        qrPerImage,
+        includeLabels,
+        outputFormat,
+        // Only the spreadsheet path applies the prefix; the other tabs carry
+        // their names inline.
+        filenamePrefix: inputMode === 'csv' ? filenamePrefix : ''
+      };
+
+      const { blob, fileCount } = await buildZip(items, options, setStatus);
 
       downloadBlob(blob, 'qr_codes.zip');
       setStatus(
@@ -126,77 +201,42 @@ export function useQrGenerator() {
     }
   };
 
-  const generateFromCsv = () => {
-    if (!csvFile) {
-      setStatus('Please upload a CSV file first.');
+  // Live preview of the first item, redrawn whenever the styling changes.
+  const [preview, setPreview] = useState('');
+  const previewValue = items[0]?.url ?? '';
+
+  useEffect(() => {
+    if (!previewValue) {
+      setPreview('');
       return;
     }
 
-    if (!urlColumn) {
-      setStatus('Please choose which column contains the URLs.');
-      return;
-    }
+    let cancelled = false;
+    // Preview at a fixed size so changing the export size does not resize the
+    // on-screen image.
+    generateQRCode(previewValue, { ...renderOptions, size: 320 })
+      .then((url) => {
+        if (!cancelled) setPreview(url);
+      })
+      .catch(() => {
+        if (!cancelled) setPreview('');
+      });
 
-    const items = csvRowsToItems(csvRows, urlColumn, filenameColumn);
-
-    if (items.length === 0) {
-      setStatus(`No URLs found in the "${urlColumn}" column.`);
-      return;
-    }
-
-    void generateAndDownload(items, filenamePrefix);
-  };
-
-  const generateFromForm = () => {
-    // A row with copies > 1 repeats the same URL that many times, so a single
-    // value can fill a whole sheet.
-    const items = manualEntries
-      .filter((entry) => entry.url.trim())
-      .flatMap((entry) =>
-        Array.from({ length: entry.copies }, () => ({
-          url: entry.url.trim(),
-          name: entry.filename.trim()
-        }))
-      );
-
-    if (items.length === 0) {
-      setStatus('Please enter at least one URL.');
-      return;
-    }
-
-    void generateAndDownload(items);
-  };
-
-  const generateFromPaste = () => {
-    const items = parsePastedList(pastedList);
-
-    if (items.length === 0) {
-      setStatus('Please paste at least one URL.');
-      return;
-    }
-
-    void generateAndDownload(items);
-  };
-
-  const handleGenerate = () => {
-    if (inputMode === 'csv') generateFromCsv();
-    else if (inputMode === 'paste') generateFromPaste();
-    else generateFromForm();
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [previewValue, renderOptions]);
 
   const pastedCount = useMemo(() => parsePastedList(pastedList).length, [pastedList]);
-  const hasManualUrl = manualEntries.some((entry) => entry.url.trim());
   // Combined sheets are composed on a canvas, so they can only be raster.
   const svgAvailable = qrPerImage === 1;
-
-  const canGenerate =
-    inputMode === 'csv' ? Boolean(csvFile) : inputMode === 'paste' ? pastedCount > 0 : hasManualUrl;
 
   return {
     inputMode,
     setInputMode,
-    csvFile,
-    csvHeaders,
+
+    sheetFile,
+    sheetHeaders,
     urlColumn,
     setUrlColumn,
     filenameColumn,
@@ -204,13 +244,24 @@ export function useQrGenerator() {
     filenamePrefix,
     setFilenamePrefix,
     handleFileChange,
+
     manualEntries,
     updateManualEntry,
     addManualEntry,
     removeManualEntry,
+
     pastedList,
     setPastedList,
     pastedCount,
+
+    sequence,
+    updateSequence,
+    sequenceCount: sequenceCount(sequence),
+
+    typedPayload,
+    setTypedPayload,
+    setTypedName,
+
     qrPerImage,
     setQrPerImage,
     includeLabels,
@@ -221,10 +272,21 @@ export function useQrGenerator() {
     setQrSize,
     errorLevel,
     setErrorLevel,
+
+    foreground,
+    setForeground,
+    background,
+    setBackground,
+    logo,
+    setLogo,
+
+    preview,
+    itemCount: items.length,
     isProcessing,
     status,
+    setStatus,
     svgAvailable,
-    canGenerate,
-    handleGenerate
+    canGenerate: items.length > 0,
+    handleGenerate: generateAndDownload
   };
 }

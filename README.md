@@ -4,15 +4,22 @@ A React-based web application that generates QR codes from a CSV file or from UR
 
 ## Features
 
-- 📁 Upload CSV files containing URLs
+- 📁 Upload CSV **or Excel** (`.xlsx`, `.xls`) files containing URLs
 - ✍️ Or enter URLs in a form, one row at a time, with a copies count per row
 - 📋 Or paste a list, one URL per line, comma- or tab-separated
-- 🔢 Generate multiple QR codes on a single image (batch mode), with optional labels
+- 🔢 Or generate a numbered **sequence** — prefix, range, step and zero-padding
+- 📶 Or build a **Wi-Fi, vCard, phone, SMS or email** code from a form
+- 👁️ Live preview that redraws as you change anything
+- 🎨 Custom foreground and background colours, with a **contrast check** that
+  warns when a pair is too close together to scan
+- 🖼️ Optional **logo** in the centre, which forces error correction to High
+- 🧱 Generate multiple QR codes on a single image (batch mode), with optional labels
 - 🏷️ Name output files from any column you choose, with an optional prefix
 - 🖼️ PNG (300/600/1000 px) or SVG vector output
 - 🛡️ Selectable error correction level (L/M/Q/H)
 - 📦 Download all QR codes as a ZIP file
-- 🎨 Clean and responsive user interface
+- ⏳ Every code is **static** — no redirect, no account, nothing that expires
+- 🔒 Runs entirely in the browser; nothing is uploaded
 - 🚀 Hosted on GitHub Pages
 
 ## Live Demo
@@ -77,6 +84,25 @@ Switch to the "Enter manually" tab to type URLs directly. Each row takes a URL, 
 
 Set **Copies** to repeat the same URL. One row with 20 copies and "QR codes per image" set to 20 produces a single sheet filled with that one code — handy for printing a page of identical codes.
 
+### Sequence
+
+Generates a numbered run without a list — asset tags, seat numbers, ticket
+stubs. Set a prefix, suffix, range, step and zero-padding; each code encodes its
+own identifier and is named after it. Capped at 10,000 codes per batch so a
+runaway range cannot lock up the tab.
+
+### Wi-Fi & more
+
+Builds a single code from a structured form for one of: Wi-Fi network, contact
+card (vCard), phone number, SMS, email, or plain text. These are still static QR
+codes — only the payload string differs, using the prefixes phones recognise
+(`WIFI:`, `BEGIN:VCARD`, `tel:`, `SMSTO:`, `mailto:`). Characters that are
+structural in those formats (`;` `,` `"` `\`) are escaped, and vCards use CRLF
+line endings as the spec requires.
+
+Note that a Wi-Fi code carries the password in plain text inside the pattern —
+treat a printed one the way you would treat the password itself.
+
 ### Paste a list
 
 The "Paste a list" tab takes one URL per line. Add a filename after a comma or a tab:
@@ -95,7 +121,9 @@ Tab separation means two columns copied straight out of a spreadsheet work witho
 | --- | --- | --- |
 | File format | PNG, SVG | SVG is vector and only available at 1 code per image, since combined sheets are composed on a canvas |
 | Size | 300, 600, 1000 px | In batch mode this sets each cell; the label strip scales with it |
-| Error correction | L, M, Q, H | Higher tolerates more damage but produces a denser pattern |
+| Error correction | L, M, Q, H | Higher tolerates more damage but produces a denser pattern. Locked to H whenever a logo is set |
+| Colours | any hex pair | Contrast is measured; below roughly 3:1 the tool warns that phones will struggle. Light-on-dark is flagged separately |
+| Logo | any image, 10–30% | Drawn centred on a plate of background colour, aspect ratio preserved. Always test-scan before a print run |
 
 Delimiter detection is automatic for uploaded CSVs — comma, semicolon and tab all parse correctly.
 

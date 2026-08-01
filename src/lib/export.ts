@@ -18,8 +18,7 @@ export const buildZip = async (
   onStatus: (message: string) => void
 ): Promise<ZipResult> => {
   const zip = new JSZip();
-  const { size, errorLevel, qrPerImage, includeLabels, outputFormat, filenamePrefix } = options;
-  const renderOptions = { size, errorLevel };
+  const { qrPerImage, includeLabels, outputFormat, filenamePrefix, ...renderOptions } = options;
   let fileCount: number;
 
   if (qrPerImage > 1) {

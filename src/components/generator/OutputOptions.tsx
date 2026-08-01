@@ -16,6 +16,7 @@ type Props = {
   errorLevel: ErrorLevel;
   setErrorLevel: (value: ErrorLevel) => void;
   svgAvailable: boolean;
+  logoActive: boolean;
 };
 
 const SIZES = [
@@ -42,7 +43,8 @@ export function OutputOptions({
   setQrSize,
   errorLevel,
   setErrorLevel,
-  svgAvailable
+  svgAvailable,
+  logoActive
 }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
@@ -112,7 +114,11 @@ export function OutputOptions({
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="error-level">Error correction</Label>
-        <Select value={errorLevel} onValueChange={(value) => setErrorLevel(value as ErrorLevel)}>
+        <Select
+          value={logoActive ? 'H' : errorLevel}
+          onValueChange={(value) => setErrorLevel(value as ErrorLevel)}
+          disabled={logoActive}
+        >
           <SelectTrigger id="error-level">
             <SelectValue />
           </SelectTrigger>
@@ -125,7 +131,9 @@ export function OutputOptions({
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
-          Higher levels stay scannable when a code is scuffed or partly covered.{' '}
+          {logoActive
+            ? 'Locked to High while a logo is set — the logo covers modules that only High can recover. '
+            : 'Higher levels stay scannable when a code is scuffed or partly covered. '}
           <a
             href="guides/qr-code-error-correction-levels.html"
             target="_blank"
