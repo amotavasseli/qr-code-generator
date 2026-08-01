@@ -1,0 +1,105 @@
+/*
+ * Tailwind is imported WITHOUT preflight on purpose.
+ *
+ * The homepage is the one place where two styling systems share a document:
+ * public/site.css styles the hand-written header, hero, prose and footer, and
+ * Tailwind styles the React tool inside #root. Tailwind's preflight is a global
+ * element reset — it stripped the bullets off every .prose list and unbolded
+ * every heading on the static pages. So we take the theme and the utilities,
+ * and supply our own reset scoped to #root instead.
+ *
+ * The layer order is declared in site.css, which loads first. site-reset sits
+ * below Tailwind's layers so that `* { margin: 0 }` no longer outranks
+ * utilities like `mx-auto`.
+ */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tw-animate-css';
+
+/*
+ * The raw palette lives in public/site.css, which every page already links.
+ * This block only re-expresses those custom properties under the names
+ * Tailwind and shadcn expect, so colour has exactly one source of truth.
+ */
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+
+  --color-surface: var(--surface);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-contrast);
+  --color-primary-subtle: var(--primary-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-contrast);
+
+  --color-secondary: var(--surface-sunken);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--surface-sunken);
+  --color-muted-foreground: var(--text-muted);
+
+  --color-destructive: var(--danger);
+  --color-success: var(--success);
+
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+}
+
+/*
+ * The parts of preflight the shadcn components actually rely on, scoped to the
+ * tool so none of it reaches the static content. Layered below utilities so a
+ * component's own border/background classes still win.
+ */
+@layer app-reset {
+  #root {
+    color: var(--text);
+  }
+
+  #root button,
+  #root input,
+  #root select,
+  #root textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  #root button {
+    background-color: transparent;
+    background-image: none;
+    border: 0 solid var(--border);
+    cursor: pointer;
+  }
+
+  #root input,
+  #root select,
+  #root textarea {
+    border: 0 solid var(--border);
+  }
+
+  #root input::placeholder,
+  #root textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  #root svg {
+    display: block;
+    vertical-align: middle;
+  }
+
+  #root hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  #root :disabled {
+    cursor: default;
+  }
+}

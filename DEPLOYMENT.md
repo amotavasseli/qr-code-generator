@@ -119,14 +119,15 @@ This will build the app and push it to the `gh-pages` branch, which GitHub Pages
 
 The deployment is configured in `package.json`:
 
-- `homepage`: `"."` — emits relative asset paths (see the custom domain section)
-- `predeploy`: Builds the app before deploying
-- `deploy`: Uses gh-pages package to deploy the build folder
+- `base: '/'` in `vite.config.ts` — the site is served from the root of the
+  custom domain (see the custom domain section)
+- `predeploy`: Typechecks and builds the app before deploying
+- `deploy`: Uses the gh-pages package to publish the `dist` folder
 
 ### Static files served at the domain root
 
-Everything in `public/` is copied verbatim into `build/`. These must stay at the
-root to work:
+Everything in `public/` is copied verbatim into `dist/`, unbundled and
+unrewritten. These must stay at the root to work:
 
 | File | Purpose |
 | --- | --- |
@@ -167,16 +168,23 @@ adding a new guide, remember to add it to `sitemap.xml` and link it from
 To test the app locally before deploying:
 
 ```bash
-npm start
+npm run dev
 ```
 
-This will start the development server at `http://localhost:3000`. The static
-content pages are served from the same origin during development, so
-`http://localhost:3000/about.html` and `http://localhost:3000/guides/` work
+This starts the Vite dev server at `http://localhost:5173`. The static content
+pages are served from the same origin during development, so
+`http://localhost:5173/about.html` and `http://localhost:5173/guides/` work
 exactly as they will in production.
+
+To check the real production output instead — including the built asset hashes
+and every static page as it will actually ship:
+
+```bash
+npm run build && npm run preview
+```
 
 ## Additional Resources
 
 - [GitHub Pages Documentation](https://docs.github.com/en/pages)
-- [Create React App Deployment Guide](https://create-react-app.dev/docs/deployment/)
+- [Vite Static Deploy Guide](https://vite.dev/guide/static-deploy)
 - [gh-pages Package](https://www.npmjs.com/package/gh-pages)

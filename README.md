@@ -30,10 +30,10 @@ npm install
 ### Development
 
 ```bash
-npm start
+npm run dev
 ```
 
-Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the Vite dev server. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 
 ### Build
 
@@ -41,7 +41,9 @@ Runs the app in development mode. Open [http://localhost:3000](http://localhost:
 npm run build
 ```
 
-Builds the app for production to the `build` folder.
+Typechecks with `tsc`, then builds for production into the `dist` folder. Serve
+that output locally with `npm run preview` — worth doing before any deploy, since
+it is the only way to check the static guide pages as they will actually ship.
 
 ### Deploy to GitHub Pages
 
@@ -122,20 +124,42 @@ Delimiter detection is automatic for uploaded CSVs — comma, semicolon and tab 
 ## Site structure
 
 The React app is the generator only. Everything else on the site is plain static
-HTML in `public/`, which CRA copies verbatim into `build/`:
+HTML that Vite copies verbatim from `public/` into `dist/`:
 
 ```
+index.html        Vite's entry. The React tool mounts into #root; the H1, FAQ,
+                  how-to and footer around it are static markup so crawlers see
+                  them without executing JavaScript
 public/
-  index.html      React tool mounts into #root; the H1, FAQ, how-to and
-                  footer around it are static markup so crawlers see them
-                  without executing JavaScript
-  site.css        shared styling for all static pages
+  site.css        shared styling for all static pages, and the single source of
+                  truth for the colour palette (see "Styling" below)
   about.html  contact.html  privacy.html  terms.html
-  guides/         eight long-form guides + an index
-  robots.txt  sitemap.xml  ads.txt  CNAME
+  guides/         sixteen long-form guides + an index
+  robots.txt  sitemap.xml  ads.txt  CNAME  .nojekyll
 ```
 
-Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. `homepage` in `package.json` is `"."` for the same reason — it makes CRA emit relative asset paths. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://www.batchqrcodes.com/` — the `www` subdomain is canonical, matching `public/CNAME`; see [DEPLOYMENT.md](DEPLOYMENT.md) for why.
+Only `index.html` is a Vite entry. Nothing in `public/` is bundled, parsed or
+rewritten — it lands in `dist/` byte-for-byte, which is exactly what the guide
+library wants.
+
+Internal links are **relative**, not root-absolute (`about.html`, `../privacy.html`). That keeps every page navigable when opened straight off disk as a `file://` URL, under the dev server, and in production. Canonical tags and `sitemap.xml` stay absolute, pointing at `https://www.batchqrcodes.com/` — the `www` subdomain is canonical, matching `public/CNAME`; see [DEPLOYMENT.md](DEPLOYMENT.md) for why.
+
+## Styling
+
+Two systems share the homepage, so the boundary between them is deliberate:
+
+- `public/site.css` styles the hand-written header, hero, prose and footer, and
+  declares the palette in `:root`. It is the **only** place colours are defined.
+- `src/index.css` re-expresses those same custom properties under the names
+  Tailwind and shadcn expect. Change a colour in `site.css` and both the static
+  pages and the React tool follow.
+
+Tailwind is imported **without preflight**. Its global element reset stripped the
+bullets off every `.prose` list and unbolded every heading on the static pages;
+`src/index.css` supplies a replacement reset scoped to `#root` instead. The
+`@layer` order declared at the top of `site.css` also keeps that file's universal
+`* { margin: 0 }` reset from outranking Tailwind utilities inside the tool —
+unlayered rules beat layered ones regardless of specificity.
 
 This split is deliberate. Googlebot defers JavaScript rendering to a second
 crawl wave, and AI crawlers (GPTBot, ClaudeBot, PerplexityBot) do not execute JS
