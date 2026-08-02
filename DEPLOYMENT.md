@@ -1,54 +1,46 @@
 # Deployment Guide
 
-This guide explains how to deploy the QR Code Generator to GitHub Pages at
-**www.batchqrcodes.com**.
+This guide explains how to deploy the QR Code Generator to Cloudflare Pages
+at **www.batchqrcodes.com**.
+
+> **Migration in progress:** the site is moving from GitHub Pages to
+> Cloudflare Pages. The GitHub Actions workflow
+> (`.github/workflows/deploy-to-github-pages.yml`) and the `gh-pages`
+> package/scripts below are kept as a working fallback until the Cloudflare
+> Pages deploy and domain cutover are verified, then removed in a follow-up
+> change. `public/CNAME` is a GitHub Pages-only file — Cloudflare ignores
+> it — and will be deleted in that same follow-up.
 
 ## Custom domain setup (www.batchqrcodes.com)
 
 `www` is the canonical domain — every absolute URL in the site (canonical
-tags, `sitemap.xml`, `robots.txt`, Open Graph tags, JSON-LD) points there, and
-`public/CNAME` contains `www.batchqrcodes.com`, which is what tells GitHub
-Pages which domain to serve.
+tags, `sitemap.xml`, `robots.txt`, Open Graph tags, JSON-LD) points there.
+**Do not switch the canonical domain to the apex (`batchqrcodes.com`)
+without also changing every one of those other files** — a mismatch
+between what's configured as the custom domain and what those files claim
+can leave crawlers (including Google's AdSense and Search Console) hitting
+a certificate or redirect mismatch instead of a page. That's what happened
+the last time this drifted, back on GitHub Pages.
 
-**Do not change `public/CNAME` to the apex (`batchqrcodes.com`) without also
-changing every one of those other files.** GitHub Pages reads the custom
-domain from whichever `CNAME` file is in the artifact on each deploy, so a
-mismatch between that file and what's registered in **Settings → Pages**
-causes GitHub to silently re-issue the domain setting on every push — which
-can interrupt certificate provisioning and leave HTTPS half-configured. That
-is exactly what happened before this domain got standardized on `www`: the
-apex briefly 301-redirected to `www` while the HTTPS certificate only covered
-`*.github.io`, so anything fetching over HTTPS (including Google's AdSense and
-Search Console crawlers) got a certificate mismatch instead of a page.
+### Adding the domain in Cloudflare
 
-### DNS records to add at your registrar
-
-One CNAME record for `www`, which is what actually serves the site:
-
-```
-CNAME    www    amotavasseli.github.io
-```
-
-Plus four A records for the apex, so `batchqrcodes.com` (no `www`) at least
-resolves instead of erroring outright — GitHub will redirect it to `www`:
-
-```
-A    @    185.199.108.153
-A    @    185.199.109.153
-A    @    185.199.110.153
-A    @    185.199.111.153
-```
-
-Then in the repository's **Settings → Pages**, set the custom domain to
-`www.batchqrcodes.com` and tick **Enforce HTTPS** once the certificate is
-issued (this can take up to 24 hours after DNS propagates — check back rather
-than re-saving the field repeatedly, since each save restarts provisioning).
+1. In the Cloudflare dashboard, add `batchqrcodes.com` as a site (this
+   imports the zone so Cloudflare can manage its DNS).
+2. In the Cloudflare Pages project's **Custom domains** settings, add
+   `www.batchqrcodes.com` as the production domain, and configure the apex
+   `batchqrcodes.com` to redirect to it — matching the canonical-domain
+   requirement above.
+3. Wait for the HTTPS certificate to issue. This can take a while after DNS
+   propagates — check back rather than re-saving the custom domain field
+   repeatedly, since each save restarts provisioning.
 
 ### Email forwarding
 
-The site publishes `contact@batchqrcodes.com`. Set up free email forwarding to
-your real inbox at the registrar — Cloudflare Email Routing and Porkbun both
-offer it at no cost. Nothing in this repo needs to change.
+The site publishes `contact@batchqrcodes.com`. Once the domain's
+nameservers point at Cloudflare, use **Cloudflare Email Routing** (free) to
+forward that address to the real inbox — set it up and send a test email
+*before* cutting DNS over, so forwarding is proven working ahead of time
+rather than discovered broken after.
 
 ## AdSense checklist
 
@@ -70,53 +62,41 @@ content, not more ad code. The `public/guides/` directory is where it goes.
 
 ## Automatic Deployment (Recommended)
 
-The repository includes a GitHub Actions workflow that automatically deploys to GitHub Pages on every push to the `main` branch.
+Cloudflare Pages is connected directly to this GitHub repo and builds
+automatically on every push to `main`.
 
 ### Setup Steps:
 
-1. **Enable GitHub Pages**:
-   - Go to your repository settings on GitHub
-   - Navigate to "Pages" in the left sidebar
-   - Under "Build and deployment", set Source to "GitHub Actions"
-
-2. **Merge the PR**:
-   - Once this PR is merged to `main`, the workflow will automatically run
-   - The site will be deployed to: `https://www.batchqrcodes.com`
-
-3. **Check Deployment Status**:
-   - Go to the "Actions" tab in your repository
-   - Look for the "Deploy to GitHub Pages" workflow
-   - Once complete, your site will be live!
+1. **Connect the repo** (one-time): Cloudflare dashboard → Workers & Pages →
+   Create → Pages → Connect to Git → select `amotavasseli/qr-code-generator`.
+2. **Build settings**: framework preset **Vite**, build command
+   `npm run build`, output directory `dist`, production branch `main`.
+3. **Push to `main`**: every push triggers a new build and deploy
+   automatically. Cloudflare also builds preview deployments for other
+   branches/PRs.
+4. **Check deployment status**: the Cloudflare Pages project's
+   **Deployments** tab shows build logs and the live/preview URLs.
 
 ## Manual Deployment
 
-If you prefer to deploy manually:
+If you prefer to deploy from the command line instead of relying on the Git
+integration, use the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/):
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+npm run build
+npx wrangler pages deploy dist
+```
 
-2. **Build the application**:
-   ```bash
-   npm run build
-   ```
-
-3. **Deploy to GitHub Pages**:
-   ```bash
-   npm run deploy
-   ```
-
-This will build the app and push it to the `gh-pages` branch, which GitHub Pages will serve.
+This requires being logged in (`npx wrangler login`) or an API token, and
+targets whichever Cloudflare Pages project you configure it against.
 
 ## Configuration
 
-The deployment is configured in `package.json`:
-
 - `base: '/'` in `vite.config.ts` — the site is served from the root of the
   custom domain (see the custom domain section)
-- `predeploy`: Typechecks and builds the app before deploying
-- `deploy`: Uses the gh-pages package to publish the `dist` folder
+- `npm run build` — typechecks and builds the app to `dist/`, which is what
+  Cloudflare Pages serves
 
 ### Static files served at the domain root
 
@@ -125,7 +105,6 @@ unrewritten. These must stay at the root to work:
 
 | File | Purpose |
 | --- | --- |
-| `CNAME` | Tells GitHub Pages which custom domain to serve |
 | `robots.txt` | Crawler directives, points at the sitemap |
 | `sitemap.xml` | Lists all 14 URLs for search engines |
 | `site.css` | Shared styling for the static content pages |
@@ -141,20 +120,28 @@ adding a new guide, remember to add it to `sitemap.xml` and link it from
 
 ### Site not loading after deployment
 
-- Ensure GitHub Pages is enabled in repository settings
-- Check that the Source is set correctly (GitHub Actions or gh-pages branch)
-- Wait a few minutes for GitHub Pages to update
+- Check the **Deployments** tab in the Cloudflare Pages project for build
+  errors.
+- Verify the custom domain is attached to the *production* deployment, not
+  just a preview.
+- DNS/certificate changes can take a while to propagate — wait rather than
+  repeatedly re-saving the custom domain setting.
 
 ### 404 errors
 
-- Verify the `homepage` field in `package.json` matches your repository name
-- For custom domains, update the `homepage` field accordingly
+- Confirm the build output directory is set to `dist` in the Pages project
+  settings.
+- Make sure the file actually exists under `public/` (for static pages) or
+  is a route Vite builds (for the app itself).
 
 ### Build failures
 
-- Check the Actions tab for error details
-- Ensure all dependencies are properly installed
-- Verify Node.js version compatibility (v18 recommended)
+- Check the **Deployments** tab in the Cloudflare Pages project for the
+  full build log.
+- Ensure dependencies install cleanly (`npm ci` locally reproduces what
+  Cloudflare runs).
+- Verify the `NODE_VERSION` environment variable in the Pages project
+  matches a Node version this repo builds under (20+).
 
 ## Local Development
 
@@ -178,6 +165,6 @@ npm run build && npm run preview
 
 ## Additional Resources
 
-- [GitHub Pages Documentation](https://docs.github.com/en/pages)
+- [Cloudflare Pages Documentation](https://developers.cloudflare.com/pages/)
+- [Wrangler CLI Documentation](https://developers.cloudflare.com/workers/wrangler/)
 - [Vite Static Deploy Guide](https://vite.dev/guide/static-deploy)
-- [gh-pages Package](https://www.npmjs.com/package/gh-pages)
