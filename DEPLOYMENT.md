@@ -3,14 +3,6 @@
 This guide explains how to deploy the QR Code Generator to Cloudflare Pages
 at **www.batchqrcodes.com**.
 
-> **Migration in progress:** the site is moving from GitHub Pages to
-> Cloudflare Pages. The GitHub Actions workflow
-> (`.github/workflows/deploy-to-github-pages.yml`) and the `gh-pages`
-> package/scripts below are kept as a working fallback until the Cloudflare
-> Pages deploy and domain cutover are verified, then removed in a follow-up
-> change. `public/CNAME` is a GitHub Pages-only file — Cloudflare ignores
-> it — and will be deleted in that same follow-up.
-
 ## Custom domain setup (www.batchqrcodes.com)
 
 `www` is the canonical domain — every absolute URL in the site (canonical

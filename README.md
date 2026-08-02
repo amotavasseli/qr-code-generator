@@ -20,7 +20,7 @@ A React-based web application that generates QR codes from a CSV file or from UR
 - 📦 Download all QR codes as a ZIP file
 - ⏳ Every code is **static** — no redirect, no account, nothing that expires
 - 🔒 Runs entirely in the browser; nothing is uploaded
-- 🚀 Hosted on GitHub Pages
+- 🚀 Hosted on Cloudflare Pages
 
 ## Live Demo
 
@@ -52,13 +52,8 @@ Typechecks with `tsc`, then builds for production into the `dist` folder. Serve
 that output locally with `npm run preview` — worth doing before any deploy, since
 it is the only way to check the static guide pages as they will actually ship.
 
-### Deploy to GitHub Pages
-
-```bash
-npm run deploy
-```
-
-Deploys the application to GitHub Pages.
+Cloudflare Pages builds and deploys automatically on every push to `main`.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the full setup.
 
 ## Input Modes
 
@@ -163,7 +158,7 @@ public/
                   truth for the colour palette (see "Styling" below)
   about.html  contact.html  privacy.html  terms.html
   guides/         sixteen long-form guides + an index
-  robots.txt  sitemap.xml  CNAME  .nojekyll
+  robots.txt  sitemap.xml
 ```
 
 Only `index.html` is a Vite entry. Nothing in `public/` is bundled, parsed or
@@ -206,7 +201,6 @@ the homepage.
 - **qrcode**: QR code generation
 - **JSZip**: ZIP file creation
 - **PapaParse**: CSV parsing
-- **gh-pages**: GitHub Pages deployment
 
 ## License
 
