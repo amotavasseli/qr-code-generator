@@ -10,9 +10,9 @@ tags, `sitemap.xml`, `robots.txt`, Open Graph tags, JSON-LD) points there.
 **Do not switch the canonical domain to the apex (`batchqrcodes.com`)
 without also changing every one of those other files** — a mismatch
 between what's configured as the custom domain and what those files claim
-can leave crawlers (including Google's AdSense and Search Console) hitting
-a certificate or redirect mismatch instead of a page. That's what happened
-the last time this drifted, back on GitHub Pages.
+can leave crawlers (including Google Search Console) hitting a certificate
+or redirect mismatch instead of a page. That's what happened the last time
+this drifted, back on GitHub Pages.
 
 ### Adding the domain in Cloudflare
 
@@ -34,23 +34,49 @@ forward that address to the real inbox — set it up and send a test email
 *before* cutting DNS over, so forwarding is proven working ahead of time
 rather than discovered broken after.
 
-## AdSense checklist
+## Analytics and Search Console
 
-The repo contains the scaffolding; these steps happen outside it.
+The site carries **no advertising and sets no cookies**. That is a deliberate
+position, not a gap waiting to be filled — see [MONETIZATION.md](MONETIZATION.md)
+before adding either. Note in particular that the public copy and the privacy
+policy were rewritten in August 2026 to *remove* pre-emptive AdSense claims that
+described advertising the site never actually ran; re-introducing ads means
+re-introducing that copy at the same time, not before.
 
-1. **Before applying** — confirm the site is live on the custom domain with
-   HTTPS, and that `/privacy.html`, `/terms.html`, `/about.html` and
-   `/contact.html` all load.
-2. **Consent for EEA/UK/Switzerland traffic** — serving personalised ads there
-   requires a Google-certified CMP integrated with IAB TCF. A hand-written cookie
-   banner does **not** satisfy this and non-compliance can suspend the account.
-   Enable Google's own **Privacy & messaging** (Funding Choices) in the AdSense
-   console; it is free and certified. No repo change required.
-5. **Search Console** — verify the domain and submit
-   `https://www.batchqrcodes.com/sitemap.xml`.
+### Cloudflare Web Analytics
 
-If the application is rejected for "low value content", the fix is more written
-content, not more ad code. The `public/guides/` directory is where it goes.
+Enabled through the dashboard, so **no repo change is required** and all 24 HTML
+pages are covered without a script tag to keep in sync:
+
+1. Cloudflare dashboard → the Pages project → **Analytics → Web Analytics** →
+   enable. Cloudflare injects the beacon automatically into pages served through
+   Pages, including the custom domain.
+2. Confirm it is live by loading the site and looking for a request to
+   `static.cloudflareinsights.com` in the browser's network tab.
+
+It is cookieless and sets no persistent identifier, so **no consent banner or CMP
+is needed** in the EEA/UK — and the privacy policy says exactly that, so keep the
+two in step if the analytics provider ever changes.
+
+The tradeoff: Cloudflare Web Analytics records pageviews only, with no custom
+events. That is why `/pro.html` is a page rather than a button — visits to it
+*are* the click-through metric.
+
+If auto-injection is ever turned off, the fallback is to paste the beacon
+`<script>` before `</body>` in every HTML file under `public/` plus the root
+`index.html`. Prefer auto-injection; 24 hand-synced copies will drift.
+
+### Search Console and Bing
+
+Verify the domain in Google Search Console and Bing Webmaster Tools, and submit
+`https://www.batchqrcodes.com/sitemap.xml` to both.
+
+`/pro.html` should **not** appear as an indexed page — it is `noindex` and is
+intentionally excluded from the sitemap. If Search Console reports it as indexed,
+something removed that meta tag.
+
+If coverage stalls or pages are dismissed as "low value content", the fix is more
+written content. The `public/guides/` directory is where it goes.
 
 ## Automatic Deployment (Recommended)
 
@@ -98,15 +124,24 @@ unrewritten. These must stay at the root to work:
 | File | Purpose |
 | --- | --- |
 | `robots.txt` | Crawler directives, points at the sitemap |
-| `sitemap.xml` | Lists all 14 URLs for search engines |
+| `sitemap.xml` | Lists all 23 indexable URLs for search engines |
 | `site.css` | Shared styling for the static content pages |
+| `pro.html` | Demand-signal page — **intentionally `noindex` and intentionally absent from `sitemap.xml`** |
 
-The content pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`
-and everything under `guides/`) are plain HTML rather than React routes. This is
-deliberate: they are fully readable without JavaScript, which matters because
-Googlebot defers JS rendering and AI crawlers do not execute JS at all. When
-adding a new guide, remember to add it to `sitemap.xml` and link it from
-`guides/index.html` and the homepage guide list.
+The content pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`,
+`pro.html` and everything under `guides/`) are plain HTML rather than React
+routes. This is deliberate: they are fully readable without JavaScript, which
+matters because Googlebot defers JS rendering and AI crawlers do not execute JS
+at all. When adding a new guide, remember to add it to `sitemap.xml` and link it
+from `guides/index.html` and the homepage guide list.
+
+`pro.html` is the exception to that last instruction — leave it out of
+`sitemap.xml` and leave its `noindex` tag alone. See
+[MONETIZATION.md](MONETIZATION.md) for why.
+
+The header and footer markup is hand-duplicated across every one of these pages,
+since there is no templating layer. A change to either is a mechanical edit
+across all of them — check every page, not just the one you were looking at.
 
 ## Troubleshooting
 

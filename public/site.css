@@ -327,7 +327,13 @@ body {
   margin-top: 0.25rem;
 }
 
-.cta {
+/* Every .cta on the site sits inside `main.card.prose`, and `.prose a` (0,2,0)
+   outspecifies a bare `.cta` (0,1,0) — so the button was rendering teal text on
+   the amber background, about 1.75:1, rather than the intended dark brown at
+   ~6.8:1. The `.prose a.cta` selector below is what actually wins; keep it that
+   way if either rule is ever touched. */
+.cta,
+.prose a.cta {
   display: inline-block;
   padding: 1rem 1.75rem;
   background: var(--accent);
@@ -338,7 +344,8 @@ body {
   transition: background 0.3s;
 }
 
-.cta:hover {
+.cta:hover,
+.prose a.cta:hover {
   background: var(--accent-hover);
 }
 
